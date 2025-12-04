@@ -8,6 +8,7 @@ compatibility_flags = ["nodejs_compat"]
 binding = "DB"
 database_name = "polyshed_indexer_db"
 database_id = "2adb63b0-d2dd-4cef-b088-dc73821bfcc7"
+migrations_dir = "migrations"
 
 # Durable Objects for WebSocket connections
 [[durable_objects.bindings]]
@@ -20,9 +21,6 @@ tag = "v1"
 new_sqlite_classes = ["WhaleTrackerDO"]
 
 # KV for caching
-[[kv_namespaces]]
-binding = "CACHE"
-id = "dbe447dddc6d4e5abac2975ca0b5c253"
 
 # Cron triggers for periodic indexing
 [triggers]

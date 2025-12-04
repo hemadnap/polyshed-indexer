@@ -27,15 +27,54 @@ import { openApiSpec } from './openapi.js'
 async function initializeDatabase(db) {
   try {
     // Check if tables exist
-    const tables = await db.prepare(
-      "SELECT name FROM sqlite_master WHERE type='table' AND name='whales'"
-    ).first()
+    const result = await db.prepare(
+      "SELECT name FROM sqlite_master WHERE type='table'"
+    ).all().catch(e => {
+      console.error('Schema check failed:', e);
+      return null;
+    });
     
-    if (!tables) {
-      console.log('Initializing database schema...')
+    // If no tables exist, initialize them
+    if (!result || result.results.length === 0) {
+      console.log('Initializing database schema...');
       
-      // Read and execute schema
-      const schema = `
+      // Read schema from file
+      const schemaPath = new URL('../schema.sql', import.meta.url);
+      let schema;
+      try {
+        const response = await fetch(schemaPath.href);
+        schema = await response.text();
+      } catch (e) {
+        // If we can't load from file, use inline schema
+        console.log('Loading schema from inline definition...');
+        schema = INLINE_SCHEMA;
+      }
+      
+      // Execute schema statements one by one
+      const statements = schema
+        .split(';')
+        .map(s => s.trim())
+        .filter(s => s && !s.startsWith('--'));
+      
+      let createdCount = 0;
+      for (const stmt of statements) {
+        try {
+          await db.prepare(stmt).run();
+          createdCount++;
+        } catch (e) {
+          // Log but continue - some statements may fail due to IF NOT EXISTS
+          console.debug(`Skipped: ${e.message.substring(0, 50)}...`);
+        }
+      }
+      console.log(`Database schema initialized (${createdCount} statements executed)`);
+    }
+  } catch (error) {
+    console.error('Failed to initialize database:', error.message);
+  }
+}
+
+// Inline schema definition as fallback
+const INLINE_SCHEMA = `
 -- Polyshed Indexer Database Schema
 -- Complete D1 schema for whale tracking and market indexing
 
@@ -286,10 +325,12 @@ CREATE INDEX IF NOT EXISTS idx_monthly_metrics_wallet ON monthly_metrics(wallet_
       for (const stmt of statements) {
         if (stmt.trim()) {
           try {
-            await db.exec(stmt)
+            // Use prepare().run() for D1, not db.exec()
+            await db.prepare(stmt).run()
           } catch (e) {
             // Some statements may fail (e.g., index creation if it already exists)
             // This is OK - we're creating IF NOT EXISTS anyway
+            console.debug(`Schema statement skipped: ${e.message.substring(0, 50)}...`)
           }
         }
       }
