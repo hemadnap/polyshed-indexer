@@ -80,3 +80,22 @@ dist-cache/
 # Misc
 .versionrc.json
 release.json
+
+# Generated documentation (keep only README.md and .claude/)
+/*_REPORT.md
+/*_GUIDE.md
+/*_SUMMARY.md
+/*_COMPLETE.md
+/*_CHECKLIST.md
+/*_VERIFICATION.md
+/*_STATUS.md
+/*_REFERENCE.md
+/*_INDEX.md
+DEPLOYMENT.md
+IMPLEMENTATION.md
+INTEGRATION_GUIDE.md
+QUICKSTART.md
+QUICK_REFERENCE.md
+STATUS.md
+TESTING.md
+TROUBLESHOOTING.md
