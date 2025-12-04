@@ -7,27 +7,51 @@ export class TradeRepository {
   }
 
   /**
-   * Insert a new trade
+   * Create a new trade
    */
-  async insertTrade(trade) {
+  async create(trade) {
     const stmt = this.db.prepare(`
-      INSERT INTO whale_trades (
-        whale_address, market_id, outcome, side, size, price,
-        timestamp, tx_hash, processed
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO trades (
+        id, wallet_address, condition_id, outcome_index, side, size, price, value, fee,
+        transaction_hash, block_number, traded_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     await stmt.bind(
-      trade.whale_address,
-      trade.market_id,
-      trade.outcome,
+      trade.id,
+      trade.wallet_address,
+      trade.condition_id,
+      trade.outcome_index,
       trade.side,
       trade.size,
       trade.price,
-      trade.timestamp,
-      trade.tx_hash,
-      trade.processed ? 1 : 0
+      trade.value,
+      trade.fee || 0,
+      trade.transaction_hash,
+      trade.block_number,
+      trade.traded_at
     ).run();
+
+    return trade;
+  }
+
+  /**
+   * Insert a new trade (legacy alias)
+   */
+  async insertTrade(trade) {
+    return this.create(trade);
+  }
+
+  /**
+   * Find trade by transaction hash
+   */
+  async findByHash(transactionHash) {
+    const stmt = this.db.prepare(`
+      SELECT * FROM trades
+      WHERE transaction_hash = ?
+    `);
+
+    return await stmt.bind(transactionHash).first();
   }
 
   /**
@@ -65,20 +89,47 @@ export class TradeRepository {
   }
 
   /**
-   * Get recent trades for a market
+   * Find trades by market
    */
-  async getRecentTradesByMarket(marketId, limit = 50) {
+  async findByMarket(conditionId, options = {}) {
+    const { limit = 50, offset = 0 } = options;
+
     const stmt = this.db.prepare(`
-      SELECT wt.*, w.label as whale_label
-      FROM whale_trades wt
-      LEFT JOIN whales w ON wt.whale_address = w.address
-      WHERE wt.market_id = ?
-      ORDER BY wt.timestamp DESC
-      LIMIT ?
+      SELECT t.*, w.display_name as whale_label
+      FROM trades t
+      LEFT JOIN whales w ON t.wallet_address = w.wallet_address
+      WHERE t.condition_id = ?
+      ORDER BY t.traded_at DESC
+      LIMIT ? OFFSET ?
     `);
 
-    const result = await stmt.bind(marketId, limit).all();
+    const result = await stmt.bind(conditionId, limit, offset).all();
     return result.results || [];
+  }
+
+  /**
+   * Find trades by market and outcome
+   */
+  async findByMarketAndOutcome(conditionId, outcomeIndex, options = {}) {
+    const { limit = 50, offset = 0 } = options;
+
+    const stmt = this.db.prepare(`
+      SELECT t.*
+      FROM trades t
+      WHERE t.condition_id = ? AND t.outcome_index = ?
+      ORDER BY t.traded_at DESC
+      LIMIT ? OFFSET ?
+    `);
+
+    const result = await stmt.bind(conditionId, outcomeIndex, limit, offset).all();
+    return result.results || [];
+  }
+
+  /**
+   * Get recent trades for a market (legacy method)
+   */
+  async getRecentTradesByMarket(marketId, limit = 50) {
+    return this.findByMarket(marketId, { limit });
   }
 
   /**
@@ -170,16 +221,171 @@ export class TradeRepository {
    */
   async getTradeStats(startTime, endTime) {
     const stmt = this.db.prepare(`
-      SELECT 
-        COUNT(DISTINCT whale_address) as active_whales,
+      SELECT
+        COUNT(DISTINCT wallet_address) as active_whales,
         COUNT(*) as total_trades,
         SUM(size * price) as total_volume,
         AVG(size * price) as avg_trade_size,
-        COUNT(DISTINCT market_id) as markets_traded
-      FROM whale_trades
-      WHERE timestamp >= ? AND timestamp <= ?
+        COUNT(DISTINCT condition_id) as markets_traded
+      FROM trades
+      WHERE traded_at >= ? AND traded_at <= ?
     `);
 
     return await stmt.bind(startTime, endTime).first();
+  }
+
+  /**
+   * Get trade volume for a wallet
+   */
+  async getTradeVolume(walletAddress, options = {}) {
+    const { from, to } = options;
+
+    let query = `
+      SELECT SUM(value) as total_volume
+      FROM trades
+      WHERE wallet_address = ?
+    `;
+    const params = [walletAddress];
+
+    if (from) {
+      query += ' AND traded_at >= ?';
+      params.push(from);
+    }
+
+    if (to) {
+      query += ' AND traded_at <= ?';
+      params.push(to);
+    }
+
+    const stmt = this.db.prepare(query);
+    const result = await stmt.bind(...params).first();
+
+    return result?.total_volume || 0;
+  }
+
+  /**
+   * Get trade count for a wallet
+   */
+  async getTradeCount(walletAddress, options = {}) {
+    const { from, to, side } = options;
+
+    let query = `
+      SELECT COUNT(*) as count
+      FROM trades
+      WHERE wallet_address = ?
+    `;
+    const params = [walletAddress];
+
+    if (from) {
+      query += ' AND traded_at >= ?';
+      params.push(from);
+    }
+
+    if (to) {
+      query += ' AND traded_at <= ?';
+      params.push(to);
+    }
+
+    if (side) {
+      query += ' AND side = ?';
+      params.push(side);
+    }
+
+    const stmt = this.db.prepare(query);
+    const result = await stmt.bind(...params).first();
+
+    return result?.count || 0;
+  }
+
+  /**
+   * Bulk create trades
+   */
+  async bulkCreate(trades) {
+    for (const trade of trades) {
+      await this.create(trade);
+    }
+  }
+
+  /**
+   * Bulk upsert trades
+   */
+  async bulkUpsert(trades) {
+    for (const trade of trades) {
+      // Check if exists
+      const existing = await this.findByHash(trade.transaction_hash);
+      if (!existing) {
+        await this.create(trade);
+      }
+    }
+  }
+
+  /**
+   * Aggregate trades by wallet
+   */
+  async aggregateByWallet(options = {}) {
+    const { from, to, limit = 100 } = options;
+
+    let query = `
+      SELECT
+        wallet_address,
+        COUNT(*) as trade_count,
+        SUM(value) as total_volume,
+        AVG(value) as avg_trade_size
+      FROM trades
+      WHERE 1=1
+    `;
+    const params = [];
+
+    if (from) {
+      query += ' AND traded_at >= ?';
+      params.push(from);
+    }
+
+    if (to) {
+      query += ' AND traded_at <= ?';
+      params.push(to);
+    }
+
+    query += ' GROUP BY wallet_address ORDER BY total_volume DESC LIMIT ?';
+    params.push(limit);
+
+    const stmt = this.db.prepare(query);
+    const result = await stmt.bind(...params).all();
+    return result.results || [];
+  }
+
+  /**
+   * Aggregate trades by market
+   */
+  async aggregateByMarket(options = {}) {
+    const { from, to, limit = 100 } = options;
+
+    let query = `
+      SELECT
+        condition_id,
+        COUNT(*) as trade_count,
+        SUM(value) as total_volume,
+        COUNT(DISTINCT wallet_address) as unique_traders
+      FROM trades
+      WHERE 1=1
+    `;
+    const params = [];
+
+    if (from) {
+      query += ' AND traded_at >= ?';
+      params.push(from);
+    }
+
+    if (to) {
+      query += ' AND traded_at <= ?';
+      params.push(to);
+    }
+
+    query += ' GROUP BY condition_id ORDER BY total_volume DESC LIMIT ?';
+    params.push(limit);
+
+    const stmt = this.db.prepare(query);
+    const result = await stmt.bind(...params).all();
+    return result.results || [];
   }
 }

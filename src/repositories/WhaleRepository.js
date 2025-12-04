@@ -78,9 +78,114 @@ export class WhaleRepository {
   }
 
   async delete(address) {
-    await this.db.prepare(`
+    const result = await this.db.prepare(`
       DELETE FROM whales WHERE wallet_address = ?
     `).bind(address).run()
+
+    return result.success || true
+  }
+
+  /**
+   * Find top whales by a metric
+   */
+  async findTop(metric = 'total_roi', options = {}) {
+    const { limit = 10, minVolume = 0 } = options
+
+    const validMetrics = ['total_roi', 'total_volume', 'win_rate', 'sharpe_ratio', 'total_pnl']
+    const sortMetric = validMetrics.includes(metric) ? metric : 'total_roi'
+
+    const result = await this.db.prepare(`
+      SELECT * FROM whales
+      WHERE total_volume >= ? AND is_active = 1
+      ORDER BY ${sortMetric} DESC
+      LIMIT ?
+    `).bind(minVolume, limit).all()
+
+    return result.results || []
+  }
+
+  /**
+   * Find whales by performance criteria
+   */
+  async findByMetrics(criteria = {}, options = {}) {
+    const { limit = 100, offset = 0 } = options
+    const {
+      minRoi,
+      maxRoi,
+      minWinRate,
+      maxWinRate,
+      minVolume,
+      maxVolume,
+      minSharpe,
+      maxSharpe
+    } = criteria
+
+    let query = 'SELECT * FROM whales WHERE 1=1'
+    const params = []
+
+    if (minRoi !== undefined) {
+      query += ' AND total_roi >= ?'
+      params.push(minRoi)
+    }
+
+    if (maxRoi !== undefined) {
+      query += ' AND total_roi <= ?'
+      params.push(maxRoi)
+    }
+
+    if (minWinRate !== undefined) {
+      query += ' AND win_rate >= ?'
+      params.push(minWinRate)
+    }
+
+    if (maxWinRate !== undefined) {
+      query += ' AND win_rate <= ?'
+      params.push(maxWinRate)
+    }
+
+    if (minVolume !== undefined) {
+      query += ' AND total_volume >= ?'
+      params.push(minVolume)
+    }
+
+    if (maxVolume !== undefined) {
+      query += ' AND total_volume <= ?'
+      params.push(maxVolume)
+    }
+
+    if (minSharpe !== undefined) {
+      query += ' AND sharpe_ratio >= ?'
+      params.push(minSharpe)
+    }
+
+    if (maxSharpe !== undefined) {
+      query += ' AND sharpe_ratio <= ?'
+      params.push(maxSharpe)
+    }
+
+    query += ' ORDER BY total_roi DESC LIMIT ? OFFSET ?'
+    params.push(limit, offset)
+
+    const result = await this.db.prepare(query).bind(...params).all()
+    return result.results || []
+  }
+
+  /**
+   * Bulk update whales
+   */
+  async bulkUpdate(updates) {
+    for (const { address, data } of updates) {
+      await this.update(address, data)
+    }
+  }
+
+  /**
+   * Bulk create whales
+   */
+  async bulkCreate(whales) {
+    for (const whale of whales) {
+      await this.create(whale)
+    }
   }
 
   async getEvents(address, options = {}) {

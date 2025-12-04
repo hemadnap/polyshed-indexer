@@ -79,21 +79,51 @@ export class ClobService {
    */
   async getActiveMarkets(options = {}) {
     const { limit = 1000, offset = 0 } = options
-    
+
     const params = new URLSearchParams({
       limit: limit.toString(),
       offset: offset.toString(),
       active: 'true'
     })
-    
+
     try {
       const response = await this.fetch(`/markets?${params.toString()}`)
       const data = await response.json()
-      
+
       const markets = (data.data || data || []).filter(m => m.active === true)
       return markets
     } catch (error) {
       console.error('Failed to fetch active markets:', error)
+      throw new Error(`CLOB API error: ${error.message}`)
+    }
+  }
+
+  /**
+   * Get order book for a market
+   */
+  async getMarketOrderBook(conditionId, outcomeIndex = 0) {
+    try {
+      const response = await this.fetch(`/book?condition_id=${conditionId}&outcome=${outcomeIndex}`)
+      const data = await response.json()
+
+      return data || { bids: [], asks: [] }
+    } catch (error) {
+      console.error('Failed to fetch order book:', error)
+      throw new Error(`CLOB API error: ${error.message}`)
+    }
+  }
+
+  /**
+   * Get current market prices
+   */
+  async getMarketPrices(conditionId) {
+    try {
+      const response = await this.fetch(`/prices/${conditionId}`)
+      const data = await response.json()
+
+      return data || []
+    } catch (error) {
+      console.error('Failed to fetch market prices:', error)
       throw new Error(`CLOB API error: ${error.message}`)
     }
   }

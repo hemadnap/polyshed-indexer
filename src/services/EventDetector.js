@@ -17,6 +17,28 @@ export class EventDetector {
   }
 
   /**
+   * Get event repository (for tests)
+   */
+  getEventRepository() {
+    return {
+      db: this.env.DB,
+      create: async (event) => {
+        await this.env.DB.prepare(`
+          INSERT INTO whale_events (wallet_address, condition_id, event_type, event_data, severity, detected_at)
+          VALUES (?, ?, ?, ?, ?, ?)
+        `).bind(
+          event.wallet_address,
+          event.condition_id,
+          event.type,
+          JSON.stringify(event.data),
+          event.severity,
+          Math.floor(Date.now() / 1000)
+        ).run()
+      }
+    }
+  }
+
+  /**
    * Detect events from a new trade
    */
   async detectEvents(walletAddress, trade) {
@@ -159,7 +181,7 @@ export class EventDetector {
         const pnl = (parseFloat(trade.size) * parseFloat(trade.price)) - position.total_invested
         
         return {
-          type: 'EXIT',
+          type: 'POSITION_EXIT',
           severity: Math.abs(pnl) > 500 ? 'HIGH' : 'NORMAL',
           data: {
             size: position.size,

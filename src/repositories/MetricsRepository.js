@@ -158,9 +158,9 @@ export class MetricsRepository {
    */
   async getWhalePerformance(whaleAddress, days = 30) {
     const startTime = Date.now() - (days * 24 * 60 * 60 * 1000);
-    
+
     const stmt = this.db.prepare(`
-      SELECT 
+      SELECT
         DATE(timestamp / 1000, 'unixepoch') as date,
         COUNT(*) as trades,
         SUM(size * price) as volume,
@@ -173,5 +173,137 @@ export class MetricsRepository {
 
     const result = await stmt.bind(whaleAddress, startTime).all();
     return result.results || [];
+  }
+
+  /**
+   * Find metrics by wallet (alias for findByWallet)
+   */
+  async findByWallet(walletAddress, period = 'daily', options = {}) {
+    const { limit = 30 } = options;
+
+    let table = 'whale_metrics_daily';
+    let orderBy = 'date';
+
+    if (period === 'weekly') {
+      table = 'whale_metrics_weekly';
+      orderBy = 'week_start';
+    } else if (period === 'monthly') {
+      table = 'whale_metrics_monthly';
+      orderBy = 'month';
+    }
+
+    const stmt = this.db.prepare(`
+      SELECT * FROM ${table}
+      WHERE wallet_address = ?
+      ORDER BY ${orderBy} DESC
+      LIMIT ?
+    `);
+
+    const result = await stmt.bind(walletAddress, limit).all();
+    return result.results || [];
+  }
+
+  /**
+   * Find top whales by ROI
+   */
+  async findTopByRoi(options = {}) {
+    const { limit = 10, minVolume = 0 } = options;
+
+    const stmt = this.db.prepare(`
+      SELECT w.*, m.total_roi, m.win_rate, m.sharpe_ratio
+      FROM whales w
+      LEFT JOIN whale_metrics_monthly m ON w.wallet_address = m.wallet_address
+      WHERE w.total_volume >= ? AND w.is_active = 1
+      ORDER BY w.total_roi DESC
+      LIMIT ?
+    `);
+
+    const result = await stmt.bind(minVolume, limit).all();
+    return result.results || [];
+  }
+
+  /**
+   * Generate daily metrics for a wallet
+   */
+  async generateDailyMetrics(walletAddress, date) {
+    // This would be called by MetricsService to create daily rollup
+    const stmt = this.db.prepare(`
+      INSERT OR REPLACE INTO whale_metrics_daily (
+        wallet_address, date, trades_count, volume, realized_pnl, total_pnl, roi, win_rate
+      )
+      SELECT
+        wallet_address,
+        ? as date,
+        COUNT(*) as trades_count,
+        SUM(value) as volume,
+        SUM(CASE WHEN side = 'SELL' THEN value ELSE 0 END) as realized_pnl,
+        0 as total_pnl,
+        0 as roi,
+        0 as win_rate
+      FROM trades
+      WHERE wallet_address = ?
+        AND DATE(traded_at, 'unixepoch') = ?
+      GROUP BY wallet_address
+    `);
+
+    await stmt.bind(date, walletAddress, date).run();
+  }
+
+  /**
+   * Generate weekly metrics
+   */
+  async generateWeeklyMetrics(walletAddress, weekStart) {
+    // Similar to daily but aggregates by week
+    const stmt = this.db.prepare(`
+      INSERT OR REPLACE INTO whale_metrics_weekly (
+        wallet_address, week_start, trades_count, volume, realized_pnl, total_pnl, roi, win_rate, sharpe_ratio
+      )
+      SELECT
+        wallet_address,
+        ? as week_start,
+        SUM(trades_count) as trades_count,
+        SUM(volume) as volume,
+        SUM(realized_pnl) as realized_pnl,
+        SUM(total_pnl) as total_pnl,
+        AVG(roi) as roi,
+        AVG(win_rate) as win_rate,
+        AVG(CASE WHEN sharpe_ratio IS NOT NULL THEN sharpe_ratio ELSE 0 END) as sharpe_ratio
+      FROM whale_metrics_daily
+      WHERE wallet_address = ?
+        AND date >= ?
+        AND date < DATE(?, '+7 days')
+      GROUP BY wallet_address
+    `);
+
+    await stmt.bind(weekStart, walletAddress, weekStart, weekStart).run();
+  }
+
+  /**
+   * Generate monthly metrics
+   */
+  async generateMonthlyMetrics(walletAddress, month) {
+    // Similar to weekly but aggregates by month
+    const stmt = this.db.prepare(`
+      INSERT OR REPLACE INTO whale_metrics_monthly (
+        wallet_address, month, trades_count, volume, realized_pnl, total_pnl, roi, win_rate, sharpe_ratio, max_drawdown
+      )
+      SELECT
+        wallet_address,
+        ? as month,
+        SUM(trades_count) as trades_count,
+        SUM(volume) as volume,
+        SUM(realized_pnl) as realized_pnl,
+        SUM(total_pnl) as total_pnl,
+        AVG(roi) as roi,
+        AVG(win_rate) as win_rate,
+        AVG(CASE WHEN sharpe_ratio IS NOT NULL THEN sharpe_ratio ELSE 0 END) as sharpe_ratio,
+        0 as max_drawdown
+      FROM whale_metrics_daily
+      WHERE wallet_address = ?
+        AND date LIKE ? || '%'
+      GROUP BY wallet_address
+    `);
+
+    await stmt.bind(month, walletAddress, month).run();
   }
 }

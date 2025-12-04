@@ -133,4 +133,23 @@ export class MetricsService {
     
     console.log(`Cleaned up data older than ${cutoffDays} days`)
   }
+
+  /**
+   * Get metrics for a specific whale
+   */
+  async getMetricsForWhale(walletAddress) {
+    const metrics = await this.metricsRepo.findByWallet(walletAddress)
+    if (!metrics) {
+      return null
+    }
+    return metrics
+  }
+
+  /**
+   * Get top performing whales by ROI
+   */
+  async getTopPerformers(limit = 10) {
+    const performers = await this.metricsRepo.findTopByRoi(limit)
+    return performers || []
+  }
 }
