@@ -21,6 +21,9 @@ tag = "v1"
 new_sqlite_classes = ["WhaleTrackerDO"]
 
 # KV for caching
+[[kv_namespaces]]
+binding = "CACHE"
+id = "dbe447dddc6d4e5abac2975ca0b5c253"
 
 # Cron triggers for periodic indexing
 [triggers]
