@@ -283,23 +283,22 @@ async function initializeDatabase(db) {
 
 const app = new Hono()
 
+// CORS middleware first (for service binding requests)
+app.use('/*', cors())
+
 // Security middleware - Only accept requests from service binding or cron
+// BUT: Allow public documentation endpoints regardless of origin
 app.use('/*', async (c, next) => {
   const pathname = new URL(c.req.url).pathname
+  
+  // Public documentation endpoints - allow unrestricted access
+  if (pathname === '/docs' || pathname === '/openapi.json' || pathname === '/health' || pathname === '/favicon.ico') {
+    return await next()
+  }
   
   // Allow cron triggers
   const isCron = c.req.header('cf-cron')
   if (isCron) {
-    return await next()
-  }
-  
-  // Allow health check (public endpoint)
-  if (pathname === '/health') {
-    return await next()
-  }
-  
-  // Allow documentation endpoints (public access for API discovery)
-  if (pathname === '/docs' || pathname === '/openapi.json' || pathname === '/favicon.ico') {
     return await next()
   }
   
@@ -312,23 +311,18 @@ app.use('/*', async (c, next) => {
   // For service bindings, Cloudflare doesn't add cf-connecting-ip header
   // Public internet requests ALWAYS have cf-connecting-ip
   const cfConnecting = c.req.header('cf-connecting-ip')
-  const cfRay = c.req.header('cf-ray')
   
   // If request has cf-connecting-ip, it's from the public internet - block it
   if (cfConnecting) {
     return c.json({ 
       error: 'Forbidden',
-      message: 'This service is only accessible via service binding'
+      message: 'This service is only accessible via service binding or cron'
     }, 403)
   }
   
-  // Additional check: service binding requests should not have cf-ray from internet
-  // but should have it from Cloudflare internal routing
+  // Allow service binding requests
   await next()
 })
-
-// CORS middleware (for service binding requests)
-app.use('/*', cors())
 
 // Health check
 app.get('/health', (c) => {
