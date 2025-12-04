@@ -12,6 +12,10 @@ export class WhaleRepository {
   async findAll(options = {}) {
     const { active, tracking_enabled, sortBy = 'total_volume', limit = 100, offset = 0 } = options
     
+    // Validate sortBy to prevent SQL injection
+    const validSortColumns = ['total_volume', 'total_roi', 'total_pnl', 'win_rate', 'sharpe_ratio', 'total_trades', 'last_activity_at']
+    const safeSortBy = validSortColumns.includes(sortBy) ? sortBy : 'total_volume'
+    
     let query = 'SELECT * FROM whales WHERE 1=1'
     const params = []
     
@@ -25,11 +29,16 @@ export class WhaleRepository {
       params.push(tracking_enabled ? 1 : 0)
     }
     
-    query += ` ORDER BY ${sortBy} DESC LIMIT ? OFFSET ?`
+    query += ` ORDER BY ${safeSortBy} DESC LIMIT ? OFFSET ?`
     params.push(limit, offset)
     
-    const result = await this.db.prepare(query).bind(...params).all()
-    return result.results || []
+    try {
+      const result = await this.db.prepare(query).bind(...params).all()
+      return result.results || []
+    } catch (error) {
+      console.error('[WhaleRepository] findAll error:', error.message, 'Query:', query, 'Params:', params)
+      throw error
+    }
   }
 
   async findByAddress(address) {

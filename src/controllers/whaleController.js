@@ -18,16 +18,21 @@ const app = new Hono()
  */
 app.get('/', async (c) => {
   try {
-    const { active, tracking_enabled, sort_by, limit = 100, offset = 0 } = c.req.query()
+    const query = c.req.query()
+    const limit = Math.max(1, Math.min(1000, parseInt(query.limit) || 100))
+    const offset = Math.max(0, parseInt(query.offset) || 0)
+    
+    if (!c.env?.DB) {
+      return c.json({ error: 'Database not available' }, 500)
+    }
     
     const whaleRepo = new WhaleRepository(c.env.DB)
-    
     const whales = await whaleRepo.findAll({
-      active: active === 'true' ? true : active === 'false' ? false : undefined,
-      tracking_enabled: tracking_enabled === 'true' ? true : tracking_enabled === 'false' ? false : undefined,
-      sortBy: sort_by || 'total_volume',
-      limit: parseInt(limit),
-      offset: parseInt(offset)
+      active: query.active === 'true' ? true : query.active === 'false' ? false : undefined,
+      tracking_enabled: query.tracking_enabled === 'true' ? true : query.tracking_enabled === 'false' ? false : undefined,
+      sortBy: query.sort_by || 'total_volume',
+      limit,
+      offset
     })
     
     return c.json({

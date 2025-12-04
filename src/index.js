@@ -310,9 +310,43 @@ app.get('/health', (c) => {
 // Swagger UI Documentation
 app.get('/docs', swaggerUI({ url: '/openapi.json' }))
 
-// OpenAPI spec endpoint
+// OpenAPI spec endpoint - with dynamic servers based on request host
 app.get('/openapi.json', (c) => {
-  return c.json(openApiSpec)
+  const host = c.req.header('host')
+  const isLocalhost = host && (host.includes('localhost') || host.includes('127.0.0.1'))
+  
+  console.log(`[DEBUG] /openapi.json - host: ${host}, isLocalhost: ${isLocalhost}`)
+  
+  // Create a copy of the spec with servers ordered based on context
+  const spec = { ...openApiSpec }
+  
+  if (isLocalhost) {
+    // In local dev, put localhost first
+    spec.servers = [
+      {
+        url: 'http://localhost:8787',
+        description: 'Local development'
+      },
+      {
+        url: 'https://polyshed-indexer.workers.dev',
+        description: 'Production'
+      }
+    ]
+  } else {
+    // In production, keep production first
+    spec.servers = [
+      {
+        url: 'https://polyshed-indexer.workers.dev',
+        description: 'Production'
+      },
+      {
+        url: 'http://localhost:8787',
+        description: 'Local development'
+      }
+    ]
+  }
+  
+  return c.json(spec)
 })
 
 // API routes
@@ -330,10 +364,16 @@ app.notFound((c) => {
 
 // Error handler
 app.onError((err, c) => {
-  console.error('Worker error:', err)
+  console.error('❌ Worker error:', {
+    message: err?.message,
+    stack: err?.stack,
+    name: err?.name,
+    cause: err?.cause
+  })
   return c.json({
     error: 'Internal server error',
-    message: err.message
+    message: err?.message || 'Unknown error',
+    details: process.env.NODE_ENV === 'development' ? err?.stack : undefined
   }, 500)
 })
 
