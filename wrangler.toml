@@ -1,0 +1,39 @@
+name = "polyshed_indexer"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "polyshed_indexer_db"
+database_id = "2adb63b0-d2dd-4cef-b088-dc73821bfcc7"
+
+# Durable Objects for WebSocket connections
+[[durable_objects.bindings]]
+name = "WHALE_TRACKER_DO"
+class_name = "WhaleTrackerDO"
+script_name = "polyshed_indexer"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["WhaleTrackerDO"]
+
+# KV for caching
+[[kv_namespaces]]
+binding = "CACHE"
+id = "dbe447dddc6d4e5abac2975ca0b5c253"
+
+# Cron triggers for periodic indexing
+[triggers]
+crons = [
+  "*/30 * * * *"   # Every 30 minutes - whale position updates, market snapshots, and metrics
+]
+
+# Environment variables
+[vars]
+POLYMARKET_API_BASE = "https://clob.polymarket.com"
+GAMMA_API_BASE = "https://gamma-api.polymarket.com"
+MAX_WHALES_PER_UPDATE = "50"
+BATCH_SIZE = "100"
+RATE_LIMIT_MS = "100"

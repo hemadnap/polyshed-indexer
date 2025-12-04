@@ -1,0 +1,31 @@
+{
+  "name": "polyshed-indexer",
+  "version": "1.0.0",
+  "description": "Real-time whale tracking and indexing service for Polymarket",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail",
+    "test": "vitest",
+    "db:migrate": "wrangler d1 migrations apply polyshed_indexer_db",
+    "db:local": "wrangler d1 migrations apply polyshed_indexer_db --local"
+  },
+  "keywords": [
+    "polymarket",
+    "whale-tracker",
+    "cloudflare-workers"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@hono/swagger-ui": "^0.5.2",
+    "hono": "^4.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231218.0",
+    "vitest": "^1.0.0",
+    "wrangler": "^3.22.0"
+  }
+}

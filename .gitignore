@@ -1,0 +1,82 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# Cloudflare Workers
+.wrangler/
+wrangler-migrations/
+dist/
+
+# Build outputs
+build/
+out/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.AppleDouble
+.LSOverride
+*.sublime-project
+*.sublime-workspace
+.vim/
+.emacs.d/
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+.mocha-timeout
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS files
+Thumbs.db
+.DS_Store
+.Spotlight-V100
+.Trashes
+
+# Editor backups
+*.bak
+*.BAK
+*~
+*.orig
+
+# Database files (local development)
+*.db
+*.sqlite
+*.sqlite3
+local.db
+
+# Cache
+.cache/
+dist-cache/
+
+# Misc
+.versionrc.json
+release.json
