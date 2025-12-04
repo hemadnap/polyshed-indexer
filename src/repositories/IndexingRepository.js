@@ -10,25 +10,39 @@ export class IndexingRepository {
    * Get indexing statistics
    */
   async getStats() {
-    // Get counts from actual tables
-    const tradeCount = await this.db.prepare('SELECT COUNT(*) as count FROM trades').first();
-    const whaleCount = await this.db.prepare('SELECT COUNT(*) as count FROM whales WHERE is_active = 1').first();
-    const marketCount = await this.db.prepare('SELECT COUNT(*) as count FROM markets WHERE is_active = 1').first();
-    const positionCount = await this.db.prepare('SELECT COUNT(*) as count FROM positions WHERE size > 0').first();
+    try {
+      // Get counts from actual tables
+      const tradeCount = await this.db.prepare('SELECT COUNT(*) as count FROM trades').first();
+      const whaleCount = await this.db.prepare('SELECT COUNT(*) as count FROM whales WHERE is_active = 1').first();
+      const marketCount = await this.db.prepare('SELECT COUNT(*) as count FROM markets WHERE is_active = 1').first();
+      const positionCount = await this.db.prepare('SELECT COUNT(*) as count FROM positions WHERE size > 0').first();
 
-    // Get last activity times
-    const lastTrade = await this.db.prepare('SELECT MAX(traded_at) as last_time FROM trades').first();
-    const lastWhaleUpdate = await this.db.prepare('SELECT MAX(updated_at) as last_time FROM whales').first();
+      // Get last activity times
+      const lastTrade = await this.db.prepare('SELECT MAX(traded_at) as last_time FROM trades').first();
+      const lastWhaleUpdate = await this.db.prepare('SELECT MAX(updated_at) as last_time FROM whales').first();
 
-    return {
-      total_trades: tradeCount?.count || 0,
-      total_whales: whaleCount?.count || 0,
-      total_markets: marketCount?.count || 0,
-      total_positions: positionCount?.count || 0,
-      last_trade_time: lastTrade?.last_time || 0,
-      last_whale_update: lastWhaleUpdate?.last_time || 0,
-      status: 'running'
-    };
+      return {
+        total_trades: tradeCount?.count || 0,
+        total_whales: whaleCount?.count || 0,
+        total_markets: marketCount?.count || 0,
+        total_positions: positionCount?.count || 0,
+        last_trade_time: lastTrade?.last_time || 0,
+        last_whale_update: lastWhaleUpdate?.last_time || 0,
+        status: 'running'
+      };
+    } catch (error) {
+      // Tables may not exist yet - return empty stats
+      console.log('Warning: getStats failed (tables may not exist yet):', error.message);
+      return {
+        total_trades: 0,
+        total_whales: 0,
+        total_markets: 0,
+        total_positions: 0,
+        last_trade_time: 0,
+        last_whale_update: 0,
+        status: 'initializing'
+      };
+    }
   }
 
   /**

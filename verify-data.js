@@ -7,12 +7,33 @@
  * and properly filling the database
  */
 
-import { readFileSync } from 'fs'
+import { readFileSync, existsSync, readdirSync, statSync } from 'fs'
+import { join } from 'path'
 
 // fetch is built-in to Node.js 18+
 
 const BASE_URL = 'http://localhost:8787'
-const DB_PATH = '.wrangler/state/v3/d1/miniflare-D1DatabaseObject/db.sqlite3'
+
+// Find the actual database file (miniflare uses a hash-named file)
+function findDatabasePath() {
+  const dbDir = '.wrangler/state/v3/d1/miniflare-D1DatabaseObject'
+  if (!existsSync(dbDir)) {
+    return null
+  }
+  
+  try {
+    const files = readdirSync(dbDir).filter(f => f.endsWith('.sqlite'))
+    if (files.length > 0) {
+      return join(dbDir, files[0])
+    }
+  } catch (e) {
+    // Directory doesn't exist yet
+  }
+  
+  return null
+}
+
+const DB_PATH = findDatabasePath()
 
 console.log('╔════════════════════════════════════════════════════════════════╗')
 console.log('║    Data Collection & Database Verification                    ║')
@@ -64,18 +85,15 @@ async function checkDatabase() {
   section('2. Database Status')
   
   try {
-    const fs = await import('fs')
-    const path = await import('path')
-    
-    const dbExists = fs.existsSync(DB_PATH)
+    const dbExists = DB_PATH && existsSync(DB_PATH)
     
     if (dbExists) {
-      const stats = fs.statSync(DB_PATH)
+      const stats = statSync(DB_PATH)
       log('green', '✅', `Database exists: ${DB_PATH}`)
       log('green', '✅', `Database size: ${(stats.size / 1024).toFixed(2)} KB`)
       return true
     } else {
-      log('yellow', '⚠️', `Database not found at: ${DB_PATH}`)
+      log('yellow', '⚠️', `Database not found at: .wrangler/state/v3/d1/miniflare-D1DatabaseObject/`)
       log('yellow', '⚠️', 'Database will be created on first cron run')
       return false
     }
