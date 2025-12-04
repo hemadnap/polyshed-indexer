@@ -11,6 +11,7 @@ This document serves as a comprehensive index to all documentation and resources
 | Need | Resource | Link |
 |------|----------|------|
 | **Getting Started** | Setup Instructions | `QUICKSTART.md` |
+| **Local Development** | Running Locally with D1 | `LOCAL_DEVELOPMENT_GUIDE.md` |
 | **API Testing** | Interactive API Docs | `http://localhost:8787/docs` (after `npm run dev`) |
 | **Running Tests** | Testing Guide | `TESTING.md` |
 | **Testing Summary** | Test Coverage Report | `TEST_COMPLETION_REPORT.md` |
