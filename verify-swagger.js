@@ -34,7 +34,7 @@ async function verifySwagger() {
     
     // Test production endpoint
     console.log('🌐 Testing PRODUCTION endpoint...')
-    const prodResponse = await fetch('https://polyshed-indexer.workers.dev/openapi.json')
+    const prodResponse = await fetch('https://polyshed_indexer.tcsn.workers.dev/openapi.json')
     
     if (!prodResponse.ok) {
       console.log(`⚠️  Production endpoint not responding (${prodResponse.status})\n`)
@@ -45,7 +45,7 @@ async function verifySwagger() {
       console.log(`✅ Production endpoint responding`)
       console.log(`   First server: ${prodServers[0]?.url || 'N/A'} (${prodServers[0]?.description || 'N/A'})`)
       
-      if (prodServers[0]?.url?.includes('polyshed-indexer.workers.dev')) {
+      if (prodServers[0]?.url?.includes('polyshed_indexer.tcsn.workers.dev')) {
         console.log('   ✅ CORRECT: production URL is the default server in prod\n')
       } else {
         console.log('   ⚠️  WARNING: production URL is NOT the default server\n')
@@ -54,7 +54,7 @@ async function verifySwagger() {
     
     console.log('📋 Summary:')
     console.log('   • Local dev Swagger UI at: http://localhost:8787/docs')
-    console.log('   • Production Swagger UI at: https://polyshed-indexer.workers.dev/docs')
+    console.log('   • Production Swagger UI at: https://polyshed_indexer.tcsn.workers.dev/docs')
     console.log('   • Both should now default to their respective servers\n')
     
   } catch (error) {

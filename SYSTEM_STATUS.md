@@ -384,7 +384,7 @@ RATE_LIMIT_MS = 100
 ### GitHub
 - **Repository:** https://github.com/hemadnap/polyshed-indexer
 - **Latest Commit:** 13c8c68 (docs: add endpoint reference)
-- **Production URL:** https://polyshed-indexer.workers.dev
+- **Production URL:** https://polyshed_indexer.tcsn.workers.dev
 
 ---
 

@@ -183,7 +183,7 @@ Results: 7 Passed, 0 Failed
 
 ✅ **Server Selection**:
 - Local development (`http://localhost:8787`) is listed **first** in the servers array
-- Production (`https://polyshed-indexer.workers.dev`) is listed second
+- Production (`https://polyshed_indexer.tcsn.workers.dev`) is listed second
 - Swagger UI correctly defaults to localhost in local dev environment
 
 **OpenAPI Servers Array (Local Dev)**:
@@ -195,7 +195,7 @@ Results: 7 Passed, 0 Failed
       "description": "Local development"
     },
     {
-      "url": "https://polyshed-indexer.workers.dev",
+      "url": "https://polyshed_indexer.tcsn.workers.dev",
       "description": "Production"
     }
   ]

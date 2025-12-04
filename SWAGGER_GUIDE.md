@@ -10,7 +10,7 @@ npm run dev
 
 #### Production
 ```
-https://polyshed-indexer.workers.dev/docs
+https://polyshed_indexer.tcsn.workers.dev/docs
 ```
 
 ### How to Use Swagger UI for Testing
@@ -211,24 +211,24 @@ https://polyshed-indexer.workers.dev/docs
 
 ```bash
 # Health check
-curl https://polyshed-indexer.workers.dev/health
+curl https://polyshed_indexer.tcsn.workers.dev/health
 
 # List whales
-curl https://polyshed-indexer.workers.dev/api/whales
+curl https://polyshed_indexer.tcsn.workers.dev/api/whales
 
 # Add whale
-curl -X POST https://polyshed-indexer.workers.dev/api/whales \
+curl -X POST https://polyshed_indexer.tcsn.workers.dev/api/whales \
   -H "Content-Type: application/json" \
   -d '{"wallet_address":"0x...","display_name":"Test"}'
 
 # Get specific whale
-curl https://polyshed-indexer.workers.dev/api/whales/0x...
+curl https://polyshed_indexer.tcsn.workers.dev/api/whales/0x...
 
 # Get trades for whale
-curl https://polyshed-indexer.workers.dev/api/whales/0x.../trades
+curl https://polyshed_indexer.tcsn.workers.dev/api/whales/0x.../trades
 
 # Trigger cron
-curl -X POST https://polyshed-indexer.workers.dev/api/index/trigger-cron
+curl -X POST https://polyshed_indexer.tcsn.workers.dev/api/index/trigger-cron
 ```
 
 ### Support

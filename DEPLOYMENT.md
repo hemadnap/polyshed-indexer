@@ -83,9 +83,9 @@ npm run deploy && npm run tail
 
 Once deployed, visit:
 
-- **Health Check**: `https://polyshed-indexer.workers.dev/health`
-- **API Documentation**: `https://polyshed-indexer.workers.dev/docs`
-- **OpenAPI Spec**: `https://polyshed-indexer.workers.dev/openapi.json`
+- **Health Check**: `https://polyshed_indexer.tcsn.workers.dev/health`
+- **API Documentation**: `https://polyshed_indexer.tcsn.workers.dev/docs`
+- **OpenAPI Spec**: `https://polyshed_indexer.tcsn.workers.dev/openapi.json`
 
 ### Local Development
 
@@ -105,7 +105,7 @@ curl http://localhost:8787/docs
 Once deployed or running locally, access the Swagger UI:
 
 1. **Local**: `http://localhost:8787/docs`
-2. **Production**: `https://polyshed-indexer.workers.dev/docs`
+2. **Production**: `https://polyshed_indexer.tcsn.workers.dev/docs`
 
 ### Testing Endpoints via Swagger UI
 

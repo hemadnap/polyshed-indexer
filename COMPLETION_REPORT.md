@@ -349,7 +349,7 @@ npm run deploy
 
 ### Production URL
 ```
-https://polyshed-indexer.workers.dev/docs
+https://polyshed_indexer.tcsn.workers.dev/docs
 ```
 
 ---
@@ -388,8 +388,8 @@ The service is now **ready for immediate deployment** to Cloudflare Workers with
 ## 📋 Checklist for Production
 
 - [ ] Run `npm run deploy`
-- [ ] Verify deployment at `https://polyshed-indexer.workers.dev/health`
-- [ ] Access Swagger UI at `https://polyshed-indexer.workers.dev/docs`
+- [ ] Verify deployment at `https://polyshed_indexer.tcsn.workers.dev/health`
+- [ ] Access Swagger UI at `https://polyshed_indexer.tcsn.workers.dev/docs`
 - [ ] Test endpoints via Swagger UI
 - [ ] Monitor with `npm run tail`
 - [ ] Share documentation with team

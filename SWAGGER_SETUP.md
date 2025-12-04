@@ -10,7 +10,7 @@ Successfully integrated comprehensive Swagger/OpenAPI documentation and interact
 
 ### 1. **Swagger UI Interface** 📚
 - **Location**: `/docs` endpoint
-- **Production URL**: `https://polyshed-indexer.workers.dev/docs`
+- **Production URL**: `https://polyshed_indexer.tcsn.workers.dev/docs`
 - **Local URL**: `http://localhost:8787/docs`
 - **Features**:
   - Interactive API documentation
@@ -146,7 +146,7 @@ npm run deploy
 
 ### Access Production Swagger
 ```
-https://polyshed-indexer.workers.dev/docs
+https://polyshed_indexer.tcsn.workers.dev/docs
 ```
 
 ### Monitor Logs
@@ -231,7 +231,7 @@ npm run dev
 npm run deploy
 
 # 6. Access production Swagger
-# https://polyshed-indexer.workers.dev/docs
+# https://polyshed_indexer.tcsn.workers.dev/docs
 ```
 
 ---

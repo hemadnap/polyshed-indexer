@@ -96,7 +96,7 @@ npm run dev
 npm run deploy
 
 # Access production Swagger UI
-# https://polyshed-indexer.workers.dev/docs
+# https://polyshed_indexer.tcsn.workers.dev/docs
 
 # Monitor logs
 npm run tail
@@ -161,7 +161,7 @@ npm run tail
 
 2. **Access Swagger UI**:
    ```
-   https://polyshed-indexer.workers.dev/docs
+   https://polyshed_indexer.tcsn.workers.dev/docs
    ```
 
 3. **Test Endpoints**:

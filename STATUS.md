@@ -27,7 +27,7 @@
 ```
 Endpoint: /docs
 Access: http://localhost:8787/docs (local)
-        https://polyshed-indexer.workers.dev/docs (prod)
+        https://polyshed_indexer.tcsn.workers.dev/docs (prod)
 ```
 
 ### 2. OpenAPI 3.0 Specification ✅
@@ -71,7 +71,7 @@ npm run dev
 ### Production
 ```bash
 npm run deploy
-# → https://polyshed-indexer.workers.dev/docs
+# → https://polyshed_indexer.tcsn.workers.dev/docs
 ```
 
 ### Test via Swagger UI
@@ -219,12 +219,12 @@ npm run deploy
 
 ### 2. Verify Health
 ```bash
-curl https://polyshed-indexer.workers.dev/health
+curl https://polyshed_indexer.tcsn.workers.dev/health
 ```
 
 ### 3. Access Documentation
 ```
-https://polyshed-indexer.workers.dev/docs
+https://polyshed_indexer.tcsn.workers.dev/docs
 ```
 
 ### 4. Monitor Logs
@@ -256,7 +256,7 @@ npm run tail
 1. ✅ Development: `npm run dev`
 2. ✅ Test: Visit `http://localhost:8787/docs`
 3. ✅ Deploy: `npm run deploy`
-4. ✅ Production: Visit `https://polyshed-indexer.workers.dev/docs`
+4. ✅ Production: Visit `https://polyshed_indexer.tcsn.workers.dev/docs`
 5. ✅ Monitor: `npm run tail`
 
 ---

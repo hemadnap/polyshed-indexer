@@ -15,7 +15,7 @@ http://localhost:8787
 
 **Production:**
 ```
-https://polyshed-indexer.workers.dev
+https://polyshed_indexer.tcsn.workers.dev
 ```
 
 ---

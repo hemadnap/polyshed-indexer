@@ -81,7 +81,7 @@ POST /api/index/trigger-cron
 npm run deploy
 
 # Production Swagger
-# → https://polyshed-indexer.workers.dev/docs
+# → https://polyshed_indexer.tcsn.workers.dev/docs
 
 # View logs
 npm run tail
@@ -182,7 +182,7 @@ WebSocket
 1. ✅ Development: `npm run dev`
 2. ✅ Testing: Visit `http://localhost:8787/docs`
 3. ✅ Deployment: `npm run deploy`
-4. ✅ Production: Visit `https://polyshed-indexer.workers.dev/docs`
+4. ✅ Production: Visit `https://polyshed_indexer.tcsn.workers.dev/docs`
 
 ## 📦 Stack
 

@@ -157,7 +157,7 @@ npm run dev
 
 **Production:**
 ```
-https://polyshed-indexer.workers.dev/docs
+https://polyshed_indexer.tcsn.workers.dev/docs
 ```
 
 #### Features:
