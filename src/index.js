@@ -113,13 +113,18 @@ async function initializeDatabase(db) {
       
       `CREATE TABLE IF NOT EXISTS markets (
         market_id TEXT PRIMARY KEY,
+        condition_id TEXT UNIQUE,
         question TEXT NOT NULL,
         description TEXT,
         outcome_type TEXT,
         outcomes TEXT,
+        category TEXT,
         initial_probability REAL,
         current_probability REAL,
         volume_num REAL DEFAULT 0,
+        total_volume REAL DEFAULT 0,
+        total_liquidity REAL DEFAULT 0,
+        end_date INTEGER,
         created_at INTEGER DEFAULT (unixepoch()),
         updated_at INTEGER DEFAULT (unixepoch()),
         is_active BOOLEAN DEFAULT 1
@@ -251,6 +256,21 @@ async function initializeDatabase(db) {
         await db.prepare(table).run()
       } catch (e) {
         // Ignore errors, tables may already exist
+      }
+    }
+    
+    // Add missing columns to existing tables
+    const alterStatements = [
+      `ALTER TABLE indexing_log ADD COLUMN records_processed INTEGER DEFAULT 0`,
+      `ALTER TABLE indexing_log ADD COLUMN duration_ms INTEGER DEFAULT 0`,
+      `ALTER TABLE markets ADD COLUMN end_date INTEGER`
+    ]
+    
+    for (const alter of alterStatements) {
+      try {
+        await db.prepare(alter).run()
+      } catch (e) {
+        // Ignore errors, columns may already exist
       }
     }
     
