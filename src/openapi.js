@@ -14,7 +14,7 @@ export const openApiSpec = {
   },
   servers: [
     {
-      url: 'https://polyshed-indexer.workers.dev',
+      url: 'https://polyshed_indexer.tcsn.workers.dev',
       description: 'Production'
     },
     {

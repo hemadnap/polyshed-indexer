@@ -24,7 +24,7 @@ The Polyshed Indexer is a real-time whale tracking and market indexing service b
 ## Deployment Status
 
 ### ✅ Production (Cloudflare Workers)
-**URL:** https://polyshed-indexer.workers.dev
+**URL:** https://polyshed_indexer.tcsn.workers.dev ⚠️ **(Note: underscores, not hyphens)**
 
 | Component | Status | Details |
 |-----------|--------|---------|
@@ -35,14 +35,9 @@ The Polyshed Indexer is a real-time whale tracking and market indexing service b
 | Durable Objects | ✅ Connected | WhaleTrackerDO ready |
 | Documentation | ✅ Public | /docs accessible globally |
 
-**Cron Schedule:**
-```
-*/5  * * * * - Quick whale update (every 5 min)
-*/15 * * * * - Market snapshots (every 15 min)
-*/30 * * * * - Full update cycle (every 30 min)
-0    * * * * - Hourly metrics
-0    0 * * * - Daily tasks (rollups, cleanup)
-```
+**Important: Public Access Restrictions**
+- ✅ Public endpoints: `/docs`, `/openapi.json`, `/health`
+- 🔒 Data endpoints (`/api/*`): Require service binding (blocked from public internet)
 
 ### ✅ Local Development (http://localhost:8787)
 
@@ -172,16 +167,22 @@ CREATE TABLE whales (
 
 ### Public Access
 ✅ `/health` - Available globally  
-✅ `/docs` - Available globally  
-✅ `/openapi.json` - Available globally  
+✅ `/docs` - Available globally (Swagger UI documentation)
+✅ `/openapi.json` - Available globally (OpenAPI specification)
 
-### Protected Access (Production)
-🔒 All data endpoints require service binding or cron authentication  
+### Protected Access (Intentional)
+🔒 All data endpoints (`/api/*`) require service binding or cron authentication  
 🔒 `cf-connecting-ip` header checked to distinguish internet vs. service binding  
 🔒 Cron jobs identified via `cf-cron` header  
 
-### Local Development
-✅ All endpoints accessible on localhost (no restrictions)
+### Important Note
+**The `/api/whales` endpoint is intentionally blocked for public internet access.**
+This is a security feature to prevent unauthorized data access. 
+
+**To access data endpoints:**
+- Use Swagger UI at `/docs` for interactive testing
+- Configure service binding for internal access
+- Use local development (`npm run dev`) for unrestricted access
 
 ---
 
@@ -220,11 +221,11 @@ open http://localhost:8787/docs
 
 **Production:**
 ```bash
-# Test endpoint
-curl https://polyshed-indexer.workers.dev/api/whales
+# Test endpoint (correct URL with underscores)
+curl https://polyshed_indexer.tcsn.workers.dev/api/whales
 
 # View Swagger UI
-open https://polyshed-indexer.workers.dev/docs
+open https://polyshed_indexer.tcsn.workers.dev/docs
 ```
 
 ### Create a Whale

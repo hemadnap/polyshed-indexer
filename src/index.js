@@ -361,7 +361,7 @@ app.get('/openapi.json', (c) => {
         description: 'Local development'
       },
       {
-        url: 'https://polyshed-indexer.workers.dev',
+        url: 'https://polyshed_indexer.tcsn.workers.dev',
         description: 'Production'
       }
     ]
@@ -369,7 +369,7 @@ app.get('/openapi.json', (c) => {
     // In production, keep production first
     spec.servers = [
       {
-        url: 'https://polyshed-indexer.workers.dev',
+        url: 'https://polyshed_indexer.tcsn.workers.dev',
         description: 'Production'
       },
       {
