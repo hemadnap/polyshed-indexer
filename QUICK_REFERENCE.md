@@ -198,3 +198,28 @@ WebSocket
 **Swagger**: ✅ Fully Integrated
 **Testing**: ✅ Ready to Test
 **Deployment**: ✅ Ready to Deploy
+
+---
+
+## ✅ Recent Fixes (Dec 4, 2025)
+
+**Issue**: `/api/whales` endpoint returning internal error  
+**Status**: ✅ RESOLVED
+
+### What Was Fixed
+- Added SQL injection prevention in WhaleRepository
+- Improved parameter validation in whale controller
+- Enhanced error logging and handling
+- Added database availability check
+
+### Verification
+All endpoints tested and working:
+- ✅ GET `/api/whales` - Returns whale list
+- ✅ POST `/api/whales` - Creates new whale
+- ✅ GET `/api/whales/{address}` - Whale details
+- ✅ GET `/health` - Health check
+- ✅ GET `/api/index/status` - Status
+- ✅ GET `/docs` - Swagger UI (localhost first)
+- ✅ GET `/openapi.json` - API spec
+
+**See also**: `ENDPOINT_FIX_SUMMARY.md` and `FIX_VERIFICATION.md`
