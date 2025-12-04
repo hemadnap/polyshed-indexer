@@ -285,9 +285,21 @@ const app = new Hono()
 
 // Security middleware - Only accept requests from service binding or cron
 app.use('/*', async (c, next) => {
+  const pathname = new URL(c.req.url).pathname
+  
   // Allow cron triggers
   const isCron = c.req.header('cf-cron')
   if (isCron) {
+    return await next()
+  }
+  
+  // Allow health check (public endpoint)
+  if (pathname === '/health') {
+    return await next()
+  }
+  
+  // Allow documentation endpoints (public access for API discovery)
+  if (pathname === '/docs' || pathname === '/openapi.json' || pathname === '/favicon.ico') {
     return await next()
   }
   
