@@ -110,15 +110,15 @@ export class MarketService {
         
         for (let i = 0; i < outcomes.length; i++) {
           const price = await this.clobService.getPrice(market.condition_id, i)
-          
+
           if (price !== null) {
-            await this.marketRepo.createSnapshot({
+            await this.marketRepo.saveSnapshot({
               condition_id: market.condition_id,
               outcome_index: i,
               price,
               snapshot_at: Math.floor(Date.now() / 1000)
             })
-            
+
             snapshotCount++
           }
         }
@@ -141,7 +141,7 @@ export class MarketService {
    */
   async updateMarket(conditionId) {
     const marketData = await this.clobService.getMarket(conditionId)
-    
+
     await this.marketRepo.upsert({
       condition_id: conditionId,
       market_slug: marketData.slug,
@@ -152,6 +152,65 @@ export class MarketService {
       is_active: marketData.active,
       outcomes: JSON.stringify(marketData.outcomes)
     })
+  }
+
+  /**
+   * Save a market snapshot (alias for createSnapshot)
+   */
+  async saveSnapshot(snapshot) {
+    return await this.marketRepo.createSnapshot(snapshot)
+  }
+
+  /**
+   * Find market by condition ID
+   */
+  async findByConditionId(conditionId) {
+    return await this.marketRepo.getMarketById(conditionId)
+  }
+
+  /**
+   * Get market details with positions and trades
+   */
+  async getMarketDetails(conditionId) {
+    const market = await this.marketRepo.findByConditionId(conditionId)
+
+    if (!market) {
+      return null
+    }
+
+    const positions = await this.marketRepo.getPositionsByMarket(conditionId)
+    const trades = await this.marketRepo.getTradesByMarket(conditionId)
+
+    return {
+      market,
+      positions,
+      trades
+    }
+  }
+
+  /**
+   * Get market statistics
+   */
+  async getMarketStatistics(conditionId) {
+    const market = await this.marketRepo.findByConditionId(conditionId)
+
+    if (!market) {
+      return null
+    }
+
+    const positions = await this.marketRepo.getPositionsByMarket(conditionId)
+
+    const position_count = positions.length
+    const total_position_value = positions.reduce((sum, p) => sum + (p.current_value || 0), 0)
+    const average_position_value = position_count > 0 ? total_position_value / position_count : 0
+
+    return {
+      total_volume: market.total_volume || 0,
+      total_liquidity: market.total_liquidity || 0,
+      position_count,
+      total_position_value,
+      average_position_value
+    }
   }
 
   /**

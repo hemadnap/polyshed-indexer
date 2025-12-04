@@ -50,8 +50,8 @@ export class MetricsService {
     const roi = totalInvested > 0 ? (totalPnl / totalInvested) * 100 : 0
     
     const winningTrades = closedPositions.filter(p => p.realized_pnl > 0)
-    const winRate = (winningTrades.length / closedPositions.length) * 100
-    
+    const winRate = Math.round((winningTrades.length / closedPositions.length) * 10000) / 100 // Round to 2 decimals
+
     // Calculate Sharpe ratio
     const returns = closedPositions.map(p => (p.realized_pnl / p.total_invested) * 100)
     const avgReturn = returns.reduce((a, b) => a + b, 0) / returns.length
@@ -59,7 +59,7 @@ export class MetricsService {
       returns.reduce((sum, r) => sum + Math.pow(r - avgReturn, 2), 0) / returns.length
     )
     const sharpeRatio = stdDev > 0 ? avgReturn / stdDev : 0
-    
+
     // Update whale record
     await this.whaleRepo.update(walletAddress, {
       total_pnl: totalPnl,

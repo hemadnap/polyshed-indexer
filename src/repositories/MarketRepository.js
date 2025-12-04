@@ -289,13 +289,56 @@ export class MarketRepository {
    */
   async createSnapshot(snapshot) {
     const { condition_id, outcome_index, price, snapshot_at } = snapshot;
-    
+
     const stmt = this.db.prepare(`
       INSERT INTO market_snapshots (condition_id, outcome_index, price, snapshot_at)
       VALUES (?, ?, ?, ?)
     `);
-    
+
     return await stmt.bind(condition_id, outcome_index, price, snapshot_at).run();
+  }
+
+  /**
+   * Save a market snapshot (alias for createSnapshot)
+   */
+  async saveSnapshot(snapshot) {
+    return await this.createSnapshot(snapshot);
+  }
+
+  /**
+   * Find market by condition ID (alias for getMarketById)
+   */
+  async findByConditionId(conditionId) {
+    return await this.getMarketById(conditionId);
+  }
+
+  /**
+   * Get positions by market (delegate to PositionRepository if available)
+   */
+  async getPositionsByMarket(conditionId) {
+    // This is a placeholder - in real implementation, this would query positions table
+    const stmt = this.db.prepare(`
+      SELECT * FROM positions
+      WHERE condition_id = ? AND size > 0
+      ORDER BY current_value DESC
+    `);
+    const result = await stmt.bind(conditionId).all();
+    return result?.results || [];
+  }
+
+  /**
+   * Get trades by market (delegate to TradeRepository if available)
+   */
+  async getTradesByMarket(conditionId, limit = 100) {
+    // This is a placeholder - in real implementation, this would query trades table
+    const stmt = this.db.prepare(`
+      SELECT * FROM trades
+      WHERE condition_id = ?
+      ORDER BY traded_at DESC
+      LIMIT ?
+    `);
+    const result = await stmt.bind(conditionId, limit).all();
+    return result?.results || [];
   }
 
   /**

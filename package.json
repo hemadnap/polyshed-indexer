@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
+    "dev:cron": "node local-dev.js",
     "deploy": "wrangler deploy",
     "tail": "wrangler tail",
     "test": "vitest",

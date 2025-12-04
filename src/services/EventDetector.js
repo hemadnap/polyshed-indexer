@@ -14,6 +14,7 @@ export class EventDetector {
     this.whaleRepo = new WhaleRepository(env.DB)
     this.positionRepo = new PositionRepository(env.DB)
     this.tradeRepo = new TradeRepository(env.DB)
+    this.largeTradeThreshold = 5000 // Configurable threshold
   }
 
   /**
@@ -202,11 +203,15 @@ export class EventDetector {
    */
   async detectLargeTrade(walletAddress, trade) {
     const value = parseFloat(trade.value || trade.size * trade.price)
-    
-    if (value > 5000) { // $5000 threshold
+    const threshold = this.largeTradeThreshold || 5000
+
+    if (value >= threshold) { // Use >= instead of >
+      // Severity based on value: threshold to 2x = HIGH, 2x to 4x = HIGH, 4x+ = CRITICAL
+      const severity = value >= threshold * 4 ? 'CRITICAL' : 'HIGH'
+
       return {
         type: 'LARGE_TRADE',
-        severity: value > 20000 ? 'CRITICAL' : value > 10000 ? 'HIGH' : 'NORMAL',
+        severity,
         data: {
           side: trade.side,
           size: trade.size,
@@ -216,7 +221,7 @@ export class EventDetector {
         }
       }
     }
-    
+
     return null
   }
 
@@ -224,17 +229,13 @@ export class EventDetector {
    * Save event to database
    */
   async saveEvent(walletAddress, event) {
-    await this.env.DB.prepare(`
-      INSERT INTO whale_events (
-        wallet_address, condition_id, event_type, event_data, severity, detected_at
-      ) VALUES (?, ?, ?, ?, ?, ?)
-    `).bind(
-      walletAddress,
-      event.data.condition_id || null,
-      event.type,
-      JSON.stringify(event.data),
-      event.severity,
-      Math.floor(Date.now() / 1000)
-    ).run()
+    const eventRepo = this.getEventRepository()
+    await eventRepo.create({
+      wallet_address: walletAddress,
+      condition_id: event.data.condition_id || null,
+      type: event.type,
+      data: event.data,
+      severity: event.severity
+    })
   }
 }

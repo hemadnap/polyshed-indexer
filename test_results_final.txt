@@ -1,0 +1,1049 @@
+
+> polyshed-indexer@1.0.0 test
+> vitest
+
+
+ DEV  v1.6.1 /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer
+
+ ❯ test/repositories/TradeRepository.test.js  (27 tests | 5 failed) 15ms
+   ❯ test/repositories/TradeRepository.test.js > TradeRepository > findByWallet > should support pagination
+     → expected "spy" to be called with arguments: [ Array(1) ]
+
+Received: 
+
+  1st spy call:
+
+  Array [
+-   ArrayContaining [
+    "0x1234",
+    100,
+    200,
+-   ],
+  ]
+
+
+Number of calls: 1
+
+   ❯ test/repositories/TradeRepository.test.js > TradeRepository > findByWallet > should support date filtering
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   ❯ test/repositories/TradeRepository.test.js > TradeRepository > getTradeVolume > should support time filtering
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   ❯ test/repositories/TradeRepository.test.js > TradeRepository > getTradeCount > should support filtering
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   ❯ test/repositories/TradeRepository.test.js > TradeRepository > getRecentTrades > should order by most recent first
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/services/EventDetector.test.js  (20 tests | 4 failed) 13ms
+   ❯ test/services/EventDetector.test.js > EventDetector > detectLargeTrade > should detect large trades
+     → expected null not to be null
+   ❯ test/services/EventDetector.test.js > EventDetector > detectLargeTrade > should use configurable threshold
+     → expected null not to be null
+   ❯ test/services/EventDetector.test.js > EventDetector > saveEvent > should save event to database
+     → expected "spy" to be called at least once
+   ❯ test/services/EventDetector.test.js > EventDetector > error handling > should handle detection errors gracefully
+     → Detection failed
+ ❯ test/repositories/PositionRepository.test.js  (29 tests | 9 failed) 16ms
+   ❯ test/repositories/PositionRepository.test.js > PositionRepository > findByWallet > should only fetch positions with size > 0
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   ❯ test/repositories/PositionRepository.test.js > PositionRepository > findByWallet > should join with market data
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   ❯ test/repositories/PositionRepository.test.js > PositionRepository > findByWallet > should sort by current value
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   ❯ test/repositories/PositionRepository.test.js > PositionRepository > getPositionsByWhale > should exclude closed positions
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   ❯ test/repositories/PositionRepository.test.js > PositionRepository > getPositionsByMarket > should include whale labels
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   ❯ test/repositories/PositionRepository.test.js > PositionRepository > findClosedByWallet > should only return positions with size = 0
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   ❯ test/repositories/PositionRepository.test.js > PositionRepository > updatePosition > should update position fields
+     → expected "spy" to be called with arguments: [ StringContaining{…} ]
+
+Received: 
+
+  1st spy call:
+
+  Array [
+-   StringContaining "UPDATE whale_positions SET",
++   "
++       UPDATE positions
++       SET current_value = ?, unrealized_pnl = ?, last_updated_at = ?
++       WHERE id = ?
++     ",
+  ]
+
+
+Number of calls: 1
+
+   ❯ test/repositories/PositionRepository.test.js > PositionRepository > closePosition > should mark position as closed
+     → expected "spy" to be called with arguments: [ StringContaining{…} ]
+
+Received: 
+
+  1st spy call:
+
+  Array [
+-   StringContaining "UPDATE whale_positions",
++   "SELECT * FROM positions WHERE id = ?",
+  ]
+
+
+Number of calls: 1
+
+   ❯ test/repositories/PositionRepository.test.js > PositionRepository > getWalletPortfolioValue > should calculate total portfolio value for a wallet
+     → expected 'object' to be 'number' // Object.is equality
+ ❯ test/repositories/WhaleRepository.test.js  (27 tests | 7 failed) 17ms
+   ❯ test/repositories/WhaleRepository.test.js > WhaleRepository > findAll > should filter by active status
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   ❯ test/repositories/WhaleRepository.test.js > WhaleRepository > findAll > should filter by tracking_enabled
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   ❯ test/repositories/WhaleRepository.test.js > WhaleRepository > findAll > should sort by specified column
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   ❯ test/repositories/WhaleRepository.test.js > WhaleRepository > findAll > should apply limit and offset
+     → expected "spy" to be called with arguments: [ ArrayContaining [50, 100] ]
+
+Received: 
+
+  1st spy call:
+
+  Array [
+-   ArrayContaining [
+    50,
+    100,
+-   ],
+  ]
+
+
+Number of calls: 1
+
+   ❯ test/repositories/WhaleRepository.test.js > WhaleRepository > update > should set updated_at timestamp
+     → expected [] to include '0x11111111111111111111111111111111111…'
+   ❯ test/repositories/WhaleRepository.test.js > WhaleRepository > update > should handle multiple field updates
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   ❯ test/repositories/WhaleRepository.test.js > WhaleRepository > bulk operations > should support bulk updates
+     → Cannot convert undefined or null to object
+stderr | test/services/MetricsService.test.js > MetricsService > calculateHourlyMetrics > should continue on individual calculation errors
+Failed to calculate metrics for 0x1111111111111111111111111111111111111111: Error: Calculation failed
+    at MetricsService.<anonymous> (/Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/MetricsService.test.js:63:38)
+    at MetricsService.mockCall (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/spy/dist/index.js:50:17)
+    at MetricsService.calculateWhaleMetrics (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/tinyspy/dist/index.js:42:80)
+    at MetricsService.calculateHourlyMetrics (/Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/src/services/MetricsService.js:27:20)
+    at /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/MetricsService.test.js:66:7
+    at runTest (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:781:11)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runFiles (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:958:5)
+
+stderr | test/services/MetricsService.test.js > MetricsService > error handling > should handle calculation errors
+Failed to calculate metrics for 0x1111111111111111111111111111111111111111: Error: Calculation failed
+    at /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/MetricsService.test.js:341:21
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:135:14
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:60:26
+    at runTest (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:781:17)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runFiles (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:958:5)
+    at startTests (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:967:3)
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/vitest/dist/chunks/runtime-runBaseTests.oAvMKtQC.js:116:7
+
+ ❯ test/services/MetricsService.test.js  (19 tests | 1 failed) 33ms
+   ❯ test/services/MetricsService.test.js > MetricsService > calculateWhaleMetrics > should calculate win rate
+     → expected 66.66666666666666 to be 66.67 // Object.is equality
+ ❯ test/services/TradeProcessorService.test.js  (0 test)
+ ❯ test/services/WhaleTrackerService.test.js  (0 test)
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsFromPolymarket > should fetch and sync markets from Polymarket
+Starting market sync from Polymarket...
+Fetched 2 active markets from Polymarket
+Synced 2 markets, 0 errors
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsFromPolymarket > should handle sync errors gracefully
+Starting market sync from Polymarket...
+
+stderr | test/services/MarketService.test.js > MarketService > syncMarketsFromPolymarket > should handle sync errors gracefully
+Error syncing markets from Polymarket: Error: API Error
+    at /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/MarketService.test.js:53:21
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:135:14
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:60:26
+    at runTest (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:781:17)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runFiles (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:958:5)
+    at startTests (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:967:3)
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/vitest/dist/chunks/runtime-runBaseTests.oAvMKtQC.js:116:7
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsFromPolymarket > should handle empty market list
+Starting market sync from Polymarket...
+Fetched 0 active markets from Polymarket
+Synced 0 markets, 0 errors
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should paginate through markets and sync all pages
+Starting paginated market sync (page size: 500)...
+Page 1: Synced 3 markets, 0 errors
+
+ ❯ test/services/ClobService.test.js  (21 tests | 2 failed) 15ms
+   ❯ test/services/ClobService.test.js > ClobService > getActiveMarkets > should fetch only active markets
+     → expected [] to deeply equal [ { …(10) }, { …(10) } ]
+   ❯ test/services/ClobService.test.js > ClobService > getMarketOrderBook > should fetch order book for a market
+     → expected "fetch" to be called with arguments: [ StringContaining{…} ]
+
+Received: 
+
+  1st fetch call:
+
+  Array [
+-   StringContaining "/order-book/market-123",
++   "/book?condition_id=market-123&outcome=0",
+  ]
+
+
+Number of calls: 1
+
+stderr | test/services/ClobService.test.js > ClobService > getTradeHistory > should handle API errors
+Failed to fetch trade history: Error: Network error
+    at /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/ClobService.test.js:100:9
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:135:14
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:60:26
+    at runTest (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:781:17)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runFiles (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:958:5)
+    at startTests (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:967:3)
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/vitest/dist/chunks/runtime-runBaseTests.oAvMKtQC.js:116:7
+
+stderr | test/services/ClobService.test.js > ClobService > getPositions > should handle positions API errors
+Failed to fetch positions: Error: API Error
+    at /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/ClobService.test.js:142:9
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:135:14
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:60:26
+    at runTest (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:781:17)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runFiles (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:958:5)
+    at startTests (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:967:3)
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/vitest/dist/chunks/runtime-runBaseTests.oAvMKtQC.js:116:7
+
+stderr | test/services/ClobService.test.js > ClobService > getAllMarkets > should handle markets API errors
+Failed to fetch all markets: Error: API Error
+    at /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/ClobService.test.js:206:9
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:135:14
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:60:26
+    at runTest (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:781:17)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runFiles (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:958:5)
+    at startTests (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:967:3)
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/vitest/dist/chunks/runtime-runBaseTests.oAvMKtQC.js:116:7
+
+stderr | test/services/ClobService.test.js > ClobService > data validation > should handle malformed JSON responses
+Failed to fetch trade history: Error: Invalid JSON
+    at /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/ClobService.test.js:327:41
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:135:14
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:60:26
+    at runTest (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:781:17)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runFiles (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:958:5)
+    at startTests (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:967:3)
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/vitest/dist/chunks/runtime-runBaseTests.oAvMKtQC.js:116:7
+
+ ✓ test/integration/IndexingController.integration.test.js  (19 tests) 10ms
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should paginate through markets and sync all pages
+Page 2: Synced 3 markets, 0 errors
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should paginate through markets and sync all pages
+Pagination complete: Total synced: 6, Total errors: 0, Pages: 2
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should continue on individual page errors
+Starting paginated market sync (page size: 500)...
+Page 1: Synced 1 markets, 0 errors
+
+stderr | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should continue on individual page errors
+Error on page 1: Error: Page error
+    at ClobService.<anonymous> (/Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/MarketService.test.js:107:45)
+    at ClobService.mockCall (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/spy/dist/index.js:50:17)
+    at ClobService.getAllMarkets (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/tinyspy/dist/index.js:42:80)
+    at MarketService.syncMarketsWithPagination (/Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/src/services/MarketService.js:60:58)
+    at /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/MarketService.test.js:115:22
+    at runTest (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:781:11)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runFiles (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:958:5)
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should continue on individual page errors
+Page 2: Synced 1 markets, 0 errors
+
+stderr | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should continue on individual page errors
+<empty line>
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should continue on individual page errors
+Pagination complete: Total synced: 2, Total errors: 1, Pages: 2
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should respect custom page size
+Starting paginated market sync (page size: 250)...
+Pagination complete: Total synced: 0, Total errors: 0, Pages: 0
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should handle API rate limiting with sleep
+Starting paginated market sync (page size: 500)...
+Page 1: Synced 1 markets, 0 errors
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should handle API rate limiting with sleep
+Page 2: Synced 1 markets, 0 errors
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should handle API rate limiting with sleep
+Pagination complete: Total synced: 2, Total errors: 0, Pages: 2
+
+stderr | test/services/MarketService.test.js > MarketService > captureSnapshots > should handle snapshot capture errors
+Failed to capture snapshot for cond-6ib4jbxwj: SyntaxError: Unexpected token 'Y', "Yes,No" is not valid JSON
+    at JSON.parse (<anonymous>)
+    at MarketService.captureSnapshots (/Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/src/services/MarketService.js:109:31)
+    at /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/MarketService.test.js:194:22
+    at runTest (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:781:11)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runFiles (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:958:5)
+    at startTests (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:967:3)
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/vitest/dist/chunks/runtime-runBaseTests.oAvMKtQC.js:116:7
+
+ ❯ test/services/MarketService.test.js  (14 tests | 5 failed) 3030ms
+   ❯ test/services/MarketService.test.js > MarketService > captureSnapshots > should capture price snapshots for all active markets
+     → saveSnapshot does not exist
+   ❯ test/services/MarketService.test.js > MarketService > captureSnapshots > should skip inactive markets
+     → saveSnapshot does not exist
+   ❯ test/services/MarketService.test.js > MarketService > getMarketDetails > should retrieve market details with full context
+     → findByConditionId does not exist
+   ❯ test/services/MarketService.test.js > MarketService > getMarketDetails > should return null for non-existent market
+     → findByConditionId does not exist
+   ❯ test/services/MarketService.test.js > MarketService > getMarketStatistics > should calculate market statistics
+     → findByConditionId does not exist
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/services/TradeProcessorService.test.js [ test/services/TradeProcessorService.test.js ]
+Error: Failed to load url ../src/services/TradeProcessorService.js (resolved id: ../src/services/TradeProcessorService.js) in /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/TradeProcessorService.test.js. Does the file exist?
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/35]⎯
+
+ FAIL  test/services/WhaleTrackerService.test.js [ test/services/WhaleTrackerService.test.js ]
+Error: Failed to load url ../src/services/WhaleTrackerService.js (resolved id: ../src/services/WhaleTrackerService.js) in /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/WhaleTrackerService.test.js. Does the file exist?
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/35]⎯
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 33 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/repositories/PositionRepository.test.js > PositionRepository > findByWallet > should only fetch positions with size > 0
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/repositories/PositionRepository.test.js:113:21
+    111| 
+    112|       const query = mockDb.prepare.mock.calls[0][0]
+    113|       expect(query).toContain('p.size > 0')
+       |                     ^
+    114|     })
+    115| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/35]⎯
+
+ FAIL  test/repositories/PositionRepository.test.js > PositionRepository > findByWallet > should join with market data
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/repositories/PositionRepository.test.js:122:21
+    120| 
+    121|       const query = mockDb.prepare.mock.calls[0][0]
+    122|       expect(query).toContain('LEFT JOIN markets')
+       |                     ^
+    123|     })
+    124| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/35]⎯
+
+ FAIL  test/repositories/PositionRepository.test.js > PositionRepository > findByWallet > should sort by current value
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/repositories/PositionRepository.test.js:131:21
+    129| 
+    130|       const query = mockDb.prepare.mock.calls[0][0]
+    131|       expect(query).toContain('ORDER BY p.current_value DESC')
+       |                     ^
+    132|     })
+    133| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/35]⎯
+
+ FAIL  test/repositories/PositionRepository.test.js > PositionRepository > getPositionsByWhale > should exclude closed positions
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/repositories/PositionRepository.test.js:163:21
+    161| 
+    162|       const query = mockDb.prepare.mock.calls[0][0]
+    163|       expect(query).toContain('wp.size > 0')
+       |                     ^
+    164|     })
+    165|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/35]⎯
+
+ FAIL  test/repositories/PositionRepository.test.js > PositionRepository > getPositionsByMarket > should include whale labels
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/repositories/PositionRepository.test.js:187:21
+    185| 
+    186|       const query = mockDb.prepare.mock.calls[0][0]
+    187|       expect(query).toContain('w.label as whale_label')
+       |                     ^
+    188|     })
+    189|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/35]⎯
+
+ FAIL  test/repositories/PositionRepository.test.js > PositionRepository > findClosedByWallet > should only return positions with size = 0
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/repositories/PositionRepository.test.js:250:21
+    248| 
+    249|       const query = mockDb.prepare.mock.calls[0][0]
+    250|       expect(query).toContain('p.size = 0')
+       |                     ^
+    251|     })
+    252| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/35]⎯
+
+ FAIL  test/repositories/PositionRepository.test.js > PositionRepository > updatePosition > should update position fields
+AssertionError: expected "spy" to be called with arguments: [ StringContaining{…} ]
+
+Received: 
+
+  1st spy call:
+
+  Array [
+-   StringContaining "UPDATE whale_positions SET",
++   "
++       UPDATE positions
++       SET current_value = ?, unrealized_pnl = ?, last_updated_at = ?
++       WHERE id = ?
++     ",
+  ]
+
+
+Number of calls: 1
+
+ ❯ test/repositories/PositionRepository.test.js:272:30
+    270|       await repository.updatePosition(positionId, updates)
+    271| 
+    272|       expect(mockDb.prepare).toHaveBeenCalledWith(
+       |                              ^
+    273|         expect.stringContaining('UPDATE whale_positions SET')
+    274|       )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/35]⎯
+
+ FAIL  test/repositories/PositionRepository.test.js > PositionRepository > closePosition > should mark position as closed
+AssertionError: expected "spy" to be called with arguments: [ StringContaining{…} ]
+
+Received: 
+
+  1st spy call:
+
+  Array [
+-   StringContaining "UPDATE whale_positions",
++   "SELECT * FROM positions WHERE id = ?",
+  ]
+
+
+Number of calls: 1
+
+ ❯ test/repositories/PositionRepository.test.js:297:30
+    295|       await repository.closePosition(positionId, closingData)
+    296| 
+    297|       expect(mockDb.prepare).toHaveBeenCalledWith(
+       |                              ^
+    298|         expect.stringContaining('UPDATE whale_positions')
+    299|       )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/35]⎯
+
+ FAIL  test/repositories/PositionRepository.test.js > PositionRepository > getWalletPortfolioValue > should calculate total portfolio value for a wallet
+AssertionError: expected 'object' to be 'number' // Object.is equality
+
+- Expected
++ Received
+
+- number
++ object
+
+ ❯ test/repositories/PositionRepository.test.js:313:29
+    311|       const result = await repository.getWalletPortfolioValue(walletAd…
+    312| 
+    313|       expect(typeof result).toBe('number')
+       |                             ^
+    314|     })
+    315|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/35]⎯
+
+ FAIL  test/repositories/TradeRepository.test.js > TradeRepository > findByWallet > should support pagination
+AssertionError: expected "spy" to be called with arguments: [ Array(1) ]
+
+Received: 
+
+  1st spy call:
+
+  Array [
+-   ArrayContaining [
+    "0x1234",
+    100,
+    200,
+-   ],
+  ]
+
+
+Number of calls: 1
+
+ ❯ test/repositories/TradeRepository.test.js:106:37
+    104|       await repository.findByWallet('0x1234', { limit: 100, offset: 20…
+    105| 
+    106|       expect(mockDb.prepare().bind).toHaveBeenCalledWith(
+       |                                     ^
+    107|         expect.arrayContaining(['0x1234', 100, 200])
+    108|       )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/35]⎯
+
+ FAIL  test/repositories/TradeRepository.test.js > TradeRepository > findByWallet > should support date filtering
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/repositories/TradeRepository.test.js:119:21
+    117| 
+    118|       const query = mockDb.prepare.mock.calls[0][0]
+    119|       expect(query).toContain('executed_at')
+       |                     ^
+    120|     })
+    121|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/35]⎯
+
+ FAIL  test/repositories/TradeRepository.test.js > TradeRepository > getTradeVolume > should support time filtering
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/repositories/TradeRepository.test.js:196:21
+    194| 
+    195|       const query = mockDb.prepare.mock.calls[0][0]
+    196|       expect(query).toContain('SUM')
+       |                     ^
+    197|     })
+    198|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/35]⎯
+
+ FAIL  test/repositories/TradeRepository.test.js > TradeRepository > getTradeCount > should support filtering
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/repositories/TradeRepository.test.js:221:21
+    219| 
+    220|       const query = mockDb.prepare.mock.calls[0][0]
+    221|       expect(query).toContain('COUNT')
+       |                     ^
+    222|     })
+    223|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/35]⎯
+
+ FAIL  test/repositories/TradeRepository.test.js > TradeRepository > getRecentTrades > should order by most recent first
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/repositories/TradeRepository.test.js:246:21
+    244| 
+    245|       const query = mockDb.prepare.mock.calls[0][0]
+    246|       expect(query).toContain('ORDER BY executed_at DESC')
+       |                     ^
+    247|     })
+    248| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/35]⎯
+
+ FAIL  test/repositories/WhaleRepository.test.js > WhaleRepository > findAll > should filter by active status
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/repositories/WhaleRepository.test.js:58:21
+     56| 
+     57|       const query = mockDb.prepare.mock.calls[0][0]
+     58|       expect(query).toContain('is_active')
+       |                     ^
+     59|     })
+     60| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/35]⎯
+
+ FAIL  test/repositories/WhaleRepository.test.js > WhaleRepository > findAll > should filter by tracking_enabled
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/repositories/WhaleRepository.test.js:69:21
+     67| 
+     68|       const query = mockDb.prepare.mock.calls[0][0]
+     69|       expect(query).toContain('tracking_enabled')
+       |                     ^
+     70|     })
+     71| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/35]⎯
+
+ FAIL  test/repositories/WhaleRepository.test.js > WhaleRepository > findAll > should sort by specified column
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/repositories/WhaleRepository.test.js:78:21
+     76| 
+     77|       const query = mockDb.prepare.mock.calls[0][0]
+     78|       expect(query).toContain('total_pnl DESC')
+       |                     ^
+     79|     })
+     80| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/35]⎯
+
+ FAIL  test/repositories/WhaleRepository.test.js > WhaleRepository > findAll > should apply limit and offset
+AssertionError: expected "spy" to be called with arguments: [ ArrayContaining [50, 100] ]
+
+Received: 
+
+  1st spy call:
+
+  Array [
+-   ArrayContaining [
+    50,
+    100,
+-   ],
+  ]
+
+
+Number of calls: 1
+
+ ❯ test/repositories/WhaleRepository.test.js:86:37
+     84|       await repository.findAll({ limit: 50, offset: 100 })
+     85| 
+     86|       expect(mockDb.prepare().bind).toHaveBeenCalledWith(
+       |                                     ^
+     87|         expect.arrayContaining([50, 100])
+     88|       )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/35]⎯
+
+ FAIL  test/repositories/WhaleRepository.test.js > WhaleRepository > update > should set updated_at timestamp
+AssertionError: expected [] to include '0x11111111111111111111111111111111111…'
+ ❯ test/repositories/WhaleRepository.test.js:206:27
+    204| 
+    205|       const bindCall = mockDb.prepare().bind.mock.calls[0]
+    206|       expect(bindCall[0]).toContain(address)
+       |                           ^
+    207|     })
+    208| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/35]⎯
+
+ FAIL  test/repositories/WhaleRepository.test.js > WhaleRepository > update > should handle multiple field updates
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/repositories/WhaleRepository.test.js:223:21
+    221| 
+    222|       const query = mockDb.prepare.mock.calls[0][0]
+    223|       expect(query).toContain('UPDATE whales SET')
+       |                     ^
+    224|     })
+    225| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/35]⎯
+
+ FAIL  test/repositories/WhaleRepository.test.js > WhaleRepository > bulk operations > should support bulk updates
+TypeError: Cannot convert undefined or null to object
+ ❯ WhaleRepository.update src/repositories/WhaleRepository.js:63:39
+     61|     const params = []
+     62|     
+     63|     for (const [key, value] of Object.entries(data)) {
+       |                                       ^
+     64|       updates.push(`${key} = ?`)
+     65|       params.push(value)
+ ❯ WhaleRepository.bulkUpdate src/repositories/WhaleRepository.js:178:18
+ ❯ test/repositories/WhaleRepository.test.js:310:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/35]⎯
+
+ FAIL  test/services/ClobService.test.js > ClobService > getActiveMarkets > should fetch only active markets
+AssertionError: expected [] to deeply equal [ { …(10) }, { …(10) } ]
+
+- Expected
++ Received
+
+- Array [
+-   Object {
+-     "category": "Technology",
+-     "condition_id": "cond-0mcc8p3y9",
+-     "description": "A test market for unit testing",
+-     "end_date": 1767454913,
+-     "is_active": true,
+-     "market_slug": "test-market",
+-     "outcomes": Array [
+-       "Yes",
+-       "No",
+-     ],
+-     "question": "Will this test pass?",
+-     "total_liquidity": 50000,
+-     "total_volume": 100000,
+-   },
+-   Object {
+-     "category": "Technology",
+-     "condition_id": "cond-vpkeh0whk",
+-     "description": "A test market for unit testing",
+-     "end_date": 1767454913,
+-     "is_active": true,
+-     "market_slug": "test-market",
+-     "outcomes": Array [
+-       "Yes",
+-       "No",
+-     ],
+-     "question": "Will this test pass?",
+-     "total_liquidity": 50000,
+-     "total_volume": 100000,
+-   },
+- ]
++ Array []
+
+ ❯ test/services/ClobService.test.js:227:22
+    225|       const result = await service.getActiveMarkets()
+    226| 
+    227|       expect(result).toEqual(mockMarkets)
+       |                      ^
+    228|     })
+    229| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/35]⎯
+
+ FAIL  test/services/ClobService.test.js > ClobService > getMarketOrderBook > should fetch order book for a market
+AssertionError: expected "fetch" to be called with arguments: [ StringContaining{…} ]
+
+Received: 
+
+  1st fetch call:
+
+  Array [
+-   StringContaining "/order-book/market-123",
++   "/book?condition_id=market-123&outcome=0",
+  ]
+
+
+Number of calls: 1
+
+ ❯ test/services/ClobService.test.js:264:29
+    262| 
+    263|       expect(result).toEqual(mockOrderBook)
+    264|       expect(service.fetch).toHaveBeenCalledWith(
+       |                             ^
+    265|         expect.stringContaining(`/order-book/${marketId}`)
+    266|       )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/35]⎯
+
+ FAIL  test/services/EventDetector.test.js > EventDetector > detectLargeTrade > should detect large trades
+AssertionError: expected null not to be null
+ ❯ test/services/EventDetector.test.js:302:25
+    300|       const event = await detector.detectLargeTrade('0x1234', trade)
+    301| 
+    302|       expect(event).not.toBeNull()
+       |                         ^
+    303|       expect(event.type).toBe('LARGE_TRADE')
+    304|       expect(event.severity).toBe('HIGH')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/35]⎯
+
+ FAIL  test/services/EventDetector.test.js > EventDetector > detectLargeTrade > should use configurable threshold
+AssertionError: expected null not to be null
+ ❯ test/services/EventDetector.test.js:325:25
+    323|       const event = await detector.detectLargeTrade('0x1234', trade)
+    324| 
+    325|       expect(event).not.toBeNull()
+       |                         ^
+    326|     })
+    327|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/35]⎯
+
+ FAIL  test/services/EventDetector.test.js > EventDetector > saveEvent > should save event to database
+AssertionError: expected "spy" to be called at least once
+ ❯ test/services/EventDetector.test.js:345:52
+    343|       await detector.saveEvent(walletAddress, event)
+    344| 
+    345|       expect(detector.getEventRepository().create).toHaveBeenCalled()
+       |                                                    ^
+    346|     })
+    347|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/35]⎯
+
+ FAIL  test/services/EventDetector.test.js > EventDetector > error handling > should handle detection errors gracefully
+Error: Detection failed
+ ❯ EventDetector.<anonymous> test/services/EventDetector.test.js:359:17
+    357|       vi.spyOn(detector, 'detectNewPosition')
+    358|         .mockImplementationOnce(() => {
+    359|           throw new Error('Detection failed')
+       |                 ^
+    360|         })
+    361| 
+ ❯ EventDetector.detectEvents src/services/EventDetector.js:48:36
+ ❯ test/services/EventDetector.test.js:363:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/35]⎯
+
+ FAIL  test/services/MarketService.test.js > MarketService > captureSnapshots > should capture price snapshots for all active markets
+Error: saveSnapshot does not exist
+ ❯ test/services/MarketService.test.js:169:10
+    167|         .mockResolvedValue(mockMarkets)
+    168| 
+    169|       vi.spyOn(service.marketRepo, 'saveSnapshot')
+       |          ^
+    170|         .mockResolvedValue(true)
+    171| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/35]⎯
+
+ FAIL  test/services/MarketService.test.js > MarketService > captureSnapshots > should skip inactive markets
+Error: saveSnapshot does not exist
+ ❯ test/services/MarketService.test.js:206:10
+    204|         .mockResolvedValue(mockMarkets)
+    205| 
+    206|       vi.spyOn(service.marketRepo, 'saveSnapshot')
+       |          ^
+    207|         .mockResolvedValue(true)
+    208| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/35]⎯
+
+ FAIL  test/services/MarketService.test.js > MarketService > getMarketDetails > should retrieve market details with full context
+Error: findByConditionId does not exist
+ ❯ test/services/MarketService.test.js:226:10
+    224|       ]
+    225| 
+    226|       vi.spyOn(service.marketRepo, 'findByConditionId')
+       |          ^
+    227|         .mockResolvedValue(mockMarket)
+    228| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/35]⎯
+
+ FAIL  test/services/MarketService.test.js > MarketService > getMarketDetails > should return null for non-existent market
+Error: findByConditionId does not exist
+ ❯ test/services/MarketService.test.js:244:10
+    242| 
+    243|     it('should return null for non-existent market', async () => {
+    244|       vi.spyOn(service.marketRepo, 'findByConditionId')
+       |          ^
+    245|         .mockResolvedValue(null)
+    246| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/35]⎯
+
+ FAIL  test/services/MarketService.test.js > MarketService > getMarketStatistics > should calculate market statistics
+Error: findByConditionId does not exist
+ ❯ test/services/MarketService.test.js:266:10
+    264|       ]
+    265| 
+    266|       vi.spyOn(service.marketRepo, 'findByConditionId')
+       |          ^
+    267|         .mockResolvedValue(mockMarket)
+    268| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/35]⎯
+
+ FAIL  test/services/MetricsService.test.js > MetricsService > calculateWhaleMetrics > should calculate win rate
+AssertionError: expected 66.66666666666666 to be 66.67 // Object.is equality
+
+- Expected
++ Received
+
+- 66.67
++ 66.66666666666666
+
+ ❯ test/services/MetricsService.test.js:132:32
+    130|       const metrics = updateCall[1]
+    131| 
+    132|       expect(metrics.win_rate).toBe(66.67)
+       |                                ^
+    133|     })
+    134| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/35]⎯
+
+ Test Files  9 failed | 1 passed (10)
+      Tests  33 failed | 143 passed (176)
+   Start at  16:41:52
+   Duration  3.38s (transform 146ms, setup 0ms, collect 280ms, tests 3.15s, environment 1ms, prepare 512ms)
+
+
+ FAIL  Tests failed. Watching for file changes...
+       press h to show help, press q to quit
+[3Jc
+ RERUN  src/services/MarketService.js x1
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsFromPolymarket > should fetch and sync markets from Polymarket
+Starting market sync from Polymarket...
+Fetched 2 active markets from Polymarket
+Synced 2 markets, 0 errors
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsFromPolymarket > should handle sync errors gracefully
+Starting market sync from Polymarket...
+
+stderr | test/services/MarketService.test.js > MarketService > syncMarketsFromPolymarket > should handle sync errors gracefully
+Error syncing markets from Polymarket: Error: API Error
+    at /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/MarketService.test.js:53:21
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:135:14
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:60:26
+    at runTest (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:781:17)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runFiles (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:958:5)
+    at startTests (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:967:3)
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/vitest/dist/chunks/runtime-runBaseTests.oAvMKtQC.js:116:7
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsFromPolymarket > should handle empty market list
+Starting market sync from Polymarket...
+Fetched 0 active markets from Polymarket
+Synced 0 markets, 0 errors
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should paginate through markets and sync all pages
+Starting paginated market sync (page size: 500)...
+Page 1: Synced 3 markets, 0 errors
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should paginate through markets and sync all pages
+Page 2: Synced 3 markets, 0 errors
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should paginate through markets and sync all pages
+Pagination complete: Total synced: 6, Total errors: 0, Pages: 2
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should continue on individual page errors
+Starting paginated market sync (page size: 500)...
+Page 1: Synced 1 markets, 0 errors
+
+stderr | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should continue on individual page errors
+Error on page 1: Error: Page error
+    at ClobService.<anonymous> (/Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/MarketService.test.js:107:45)
+    at ClobService.mockCall (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/spy/dist/index.js:50:17)
+    at ClobService.getAllMarkets (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/tinyspy/dist/index.js:42:80)
+    at MarketService.syncMarketsWithPagination (/Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/src/services/MarketService.js:60:58)
+    at /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/MarketService.test.js:115:22
+    at runTest (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:781:11)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runFiles (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:958:5)
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should continue on individual page errors
+Page 2: Synced 1 markets, 0 errors
+
+stderr | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should continue on individual page errors
+<empty line>
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should continue on individual page errors
+Pagination complete: Total synced: 2, Total errors: 1, Pages: 2
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should respect custom page size
+Starting paginated market sync (page size: 250)...
+Pagination complete: Total synced: 0, Total errors: 0, Pages: 0
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should handle API rate limiting with sleep
+Starting paginated market sync (page size: 500)...
+Page 1: Synced 1 markets, 0 errors
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should handle API rate limiting with sleep
+Page 2: Synced 1 markets, 0 errors
+
+stdout | test/services/MarketService.test.js > MarketService > syncMarketsWithPagination > should handle API rate limiting with sleep
+Pagination complete: Total synced: 2, Total errors: 0, Pages: 2
+
+stderr | test/services/MarketService.test.js > MarketService > captureSnapshots > should handle snapshot capture errors
+Failed to capture snapshot for cond-4smrwurxw: SyntaxError: Unexpected token 'Y', "Yes,No" is not valid JSON
+    at JSON.parse (<anonymous>)
+    at MarketService.captureSnapshots (/Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/src/services/MarketService.js:109:31)
+    at /Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/test/services/MarketService.test.js:194:22
+    at runTest (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:781:11)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runSuite (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:909:15)
+    at runFiles (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:958:5)
+    at startTests (file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/@vitest/runner/dist/index.js:967:3)
+    at file:///Users/tcsntcsn/TCSN/Polyshed/polyshed-indexer/node_modules/vitest/dist/chunks/runtime-runBaseTests.oAvMKtQC.js:116:7
+
+ ❯ test/services/MarketService.test.js  (14 tests | 5 failed) 3031ms
+   ❯ test/services/MarketService.test.js > MarketService > captureSnapshots > should capture price snapshots for all active markets
+     → saveSnapshot does not exist
+   ❯ test/services/MarketService.test.js > MarketService > captureSnapshots > should skip inactive markets
+     → saveSnapshot does not exist
+   ❯ test/services/MarketService.test.js > MarketService > getMarketDetails > should retrieve market details with full context
+     → findByConditionId does not exist
+   ❯ test/services/MarketService.test.js > MarketService > getMarketDetails > should return null for non-existent market
+     → findByConditionId does not exist
+   ❯ test/services/MarketService.test.js > MarketService > getMarketStatistics > should calculate market statistics
+     → findByConditionId does not exist
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/services/MarketService.test.js > MarketService > captureSnapshots > should capture price snapshots for all active markets
+Error: saveSnapshot does not exist
+ ❯ test/services/MarketService.test.js:169:10
+    167|         .mockResolvedValue(mockMarkets)
+    168| 
+    169|       vi.spyOn(service.marketRepo, 'saveSnapshot')
+       |          ^
+    170|         .mockResolvedValue(true)
+    171| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  test/services/MarketService.test.js > MarketService > captureSnapshots > should skip inactive markets
+Error: saveSnapshot does not exist
+ ❯ test/services/MarketService.test.js:206:10
+    204|         .mockResolvedValue(mockMarkets)
+    205| 
+    206|       vi.spyOn(service.marketRepo, 'saveSnapshot')
+       |          ^
+    207|         .mockResolvedValue(true)
+    208| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  test/services/MarketService.test.js > MarketService > getMarketDetails > should retrieve market details with full context
+Error: findByConditionId does not exist
+ ❯ test/services/MarketService.test.js:226:10
+    224|       ]
+    225| 
+    226|       vi.spyOn(service.marketRepo, 'findByConditionId')
+       |          ^
+    227|         .mockResolvedValue(mockMarket)
+    228| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  test/services/MarketService.test.js > MarketService > getMarketDetails > should return null for non-existent market
+Error: findByConditionId does not exist
+ ❯ test/services/MarketService.test.js:244:10
+    242| 
+    243|     it('should return null for non-existent market', async () => {
+    244|       vi.spyOn(service.marketRepo, 'findByConditionId')
+       |          ^
+    245|         .mockResolvedValue(null)
+    246| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  test/services/MarketService.test.js > MarketService > getMarketStatistics > should calculate market statistics
+Error: findByConditionId does not exist
+ ❯ test/services/MarketService.test.js:266:10
+    264|       ]
+    265| 
+    266|       vi.spyOn(service.marketRepo, 'findByConditionId')
+       |          ^
+    267|         .mockResolvedValue(mockMarket)
+    268| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 9 passed (14)
+   Start at  16:44:03
+   Duration  3.04s
+
+
+ FAIL  Tests failed. Watching for file changes...
+       press h to show help, press q to quit
+       rerun x1
+[2K[1A[2K[G
