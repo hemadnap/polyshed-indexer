@@ -286,13 +286,20 @@ const app = new Hono()
 // CORS middleware first (for service binding requests)
 app.use('/*', cors())
 
-// Security middleware - Only accept requests from service binding or cron
-// BUT: Allow public documentation endpoints regardless of origin
+// Security middleware
+// TEMPORARILY: Allow all public access for testing
+// TODO: Restrict to service binding only when moving to production security
 app.use('/*', async (c, next) => {
   const pathname = new URL(c.req.url).pathname
   
-  // Public documentation endpoints - allow unrestricted access
+  // Allow all endpoints for public testing (TEMPORARY)
+  // Public documentation endpoints
   if (pathname === '/docs' || pathname === '/openapi.json' || pathname === '/health' || pathname === '/favicon.ico') {
+    return await next()
+  }
+  
+  // Allow all /api/* endpoints for public testing (TEMPORARY)
+  if (pathname.startsWith('/api/')) {
     return await next()
   }
   
