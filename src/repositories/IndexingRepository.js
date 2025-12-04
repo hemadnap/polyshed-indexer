@@ -172,10 +172,31 @@ export class IndexingRepository {
    * Get last indexing status for a specific whale
    */
   async getStatus(walletAddress) {
-    const result = await this.db.prepare(
-      `SELECT * FROM indexing_status WHERE wallet_address = ? LIMIT 1`
-    ).bind(walletAddress).first();
-    
-    return result;
+    try {
+      // Try to get last indexing log for this whale
+      const result = await this.db.prepare(
+        `SELECT * FROM indexing_log WHERE job_type = ? AND details LIKE ? ORDER BY completed_at DESC LIMIT 1`
+      ).bind('WHALE_UPDATE', `%${walletAddress}%`).first()
+      
+      if (result) {
+        return {
+          last_indexed_at: result.completed_at || result.created_at,
+          error_count: 0
+        }
+      }
+      
+      // If no indexing log exists, return a sensible default
+      return {
+        last_indexed_at: 0,
+        error_count: 0
+      }
+    } catch (error) {
+      // Gracefully handle missing table by returning defaults
+      console.warn('[IndexingRepository] getStatus query failed:', error.message)
+      return {
+        last_indexed_at: 0,
+        error_count: 0
+      }
+    }
   }
 }
